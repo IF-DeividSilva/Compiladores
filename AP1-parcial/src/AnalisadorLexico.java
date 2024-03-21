@@ -13,14 +13,24 @@ public class AnalisadorLexico {
             switch (nome) {
                 case "dec":
                     Token tokdec = new Token(TipoToken.PCDec, nome); 
-                    // pegar o caractere antes do d e verificar se é "[" e pegar o ultimo e verificar se é "]"
-                    tokens.add(tok1);
+                    // verifica se comessa em '['
+                    if (input.startsWith("[")) {
+                        tokens.add(tok1);
+                    // verifica se termina em ']'
+                    }
                     tokens.add(tokdec);
-                    tokens.add(tok2);
+                    
+                    if (input.endsWith("]")) {
+                        tokens.add(tok2);
+                    } //else {
+                        //System.out.println("ERRO delimitador inválido linha: " + indice);
+                   // }
+                    
                     controle = 1;
                     break;
+                    
                 case "integer":
-                    String[] partes = input.split(" ");
+                    String[] partes = input.split("");
                     String aux1 = partes[0];
                     boolean auxx=ValidaVar.validaVar(aux1);
                     if (auxx==true){
@@ -31,6 +41,7 @@ public class AnalisadorLexico {
                         System.out.println("ERRO var invalida linha: " + indice);
                         // erro de var invalida
                     }
+
                     if (partes.length >= 2) {
                         // Corrigindo a linha para usar substring e dividila a string em duas partes
                         int index = aux1.indexOf('[');
@@ -48,9 +59,14 @@ public class AnalisadorLexico {
                 
                 case "prog":
                     Token tokprog = new Token(TipoToken.PCProg, nome);
-                    tokens.add(tok1);
+                    if (input.startsWith("[")) {
+                        tokens.add(tok1);
+                    // verifica se termina em ']'
+                    } 
                     tokens.add(tokprog);
-                    tokens.add(tok2);
+                    if (input.endsWith("]")) {
+                        tokens.add(tok2);
+                    }
                     controle = 2;
                     break;
                 case "float":
@@ -84,7 +100,10 @@ public class AnalisadorLexico {
                     break;
                 case "print":
                     Token tokprint = new Token(TipoToken.PCImprimir, nome);
-                    tokens.add(tokprint);                    
+                    tokens.add(tokprint);    
+                    
+                    // fazer verificacao de cadeia
+
                 break;
                 case "if":
                     Token tokif= new Token(TipoToken.PCSe, nome);
