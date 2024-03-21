@@ -7,8 +7,10 @@ public class Main {
        // if (args.length > 0) {
             String nomeArq = "programa1.gyh";//args[0];
             List<String> linhas = LerArquivo.lerArquivo(nomeArq);
+            int indice = 0;
             for (String linha : linhas) {
-                System.out.println(linha);
+                indice++;
+                AnalisadorLexico.analisador (linha, indice);
             }
         //} else {
           //  System.out.println("Por favor, forneça o caminho do arquivo como argumento.");

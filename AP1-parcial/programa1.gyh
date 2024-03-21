@@ -1,6 +1,6 @@
 [dec]
-Parametro [integer]
-Fatorial[integer]
+parametro [integer]
+Fatorial [integer]
 
 [prog]
 # Calcula o fatorial de um número inteiro
