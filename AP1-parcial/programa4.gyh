@@ -1,0 +1,24 @@
+#Erro Léxico: <_, linha: 19> caractere desconhecido
+
+
+[dec]
+Parametro [integer]
+Fatorial[integer]
+
+[prog]
+# Calcula o fatorial de um número inteiro
+read Parametro
+Fatorial << Parametro
+if Parametro == 0 then 
+	
+		Fatorial << 1
+	end
+while Parametro > 1 then
+	start
+		Fatorial << Fatorial * (Parametro _ 1) 
+		Parametro << Parametro - 1
+	
+print "--------@@@@@@"
+print Fatorial
+print "--------&&&&&"
+

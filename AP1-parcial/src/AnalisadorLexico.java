@@ -23,7 +23,7 @@ public class AnalisadorLexico {
                     String aux1 = partes[0];
                     boolean auxx=ValidaVar.validaVar(aux1);
                     if (auxx==true){
-                        Token tokvar = new Token(TipoToken.Var, nome);
+                        Token tokvar = new Token(TipoToken.Var, aux1);
                         tokens.add(tokvar);
                     }
                     else{
@@ -38,9 +38,7 @@ public class AnalisadorLexico {
                         }
                         String aux2 = partes[1];
                         aux2 = aux2.replace("[", "").replace("]", "");
-                        Token tokint1 = new Token(TipoToken.Var, aux1);
                         Token tokint2 = new Token(TipoToken.PCInt, aux2);
-                        tokens.add(tokint1);
                         tokens.add(tok1);
                         tokens.add(tokint2);
                         tokens.add(tok2);
@@ -75,9 +73,6 @@ public class AnalisadorLexico {
                     boolean varOk = VerificaVar.verifica(proximo, tokens);
                     if (varOk == true) {
                         System.out.println("OKOK");
-                        Token tokvarOk = new Token(TipoToken.Var, proximo);
-                        tokens.add(tokvarOk);
-
                     }
                     else{
                         System.out.println("ERRO var nao declarada linha: " + indice);
@@ -159,7 +154,24 @@ public class AnalisadorLexico {
                     tokens.add(tokfechapar);
                     break;
                 case " ":
-                   
+                   break;
+                case "+":
+                    Token tokmais = new Token(TipoToken.OpAritSoma, nome);
+                    tokens.add(tokmais);
+                    break;
+                case "-":
+                    Token tokmenos = new Token(TipoToken.OpAritSub, nome);
+                    tokens.add(tokmenos);
+                    break;
+                case "/":
+                    Token tokdiv = new Token(TipoToken.OpAritDiv, nome);
+                    tokens.add(tokdiv);
+                    break;
+                case "*":
+                    Token tokmult = new Token(TipoToken.OpAritMult, nome);
+                    tokens.add(tokmult);
+                    break;        
+
                 default:
                     if (controle == 1){
                         //está na parte de declaração de variaveis
@@ -169,7 +181,11 @@ public class AnalisadorLexico {
                         tokens.add(tokvar);
                         break;
 
-                    }else{
+                    }else if (nome.matches("[0-9]+")){
+                        Token toknum = new Token(TipoToken.NumInt, nome);
+                        tokens.add(toknum);
+                    }
+                    else{
                         System.out.println("ERRO lexico desconhecido linha: " + indice);
                     }
             }
