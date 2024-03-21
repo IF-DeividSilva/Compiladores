@@ -2,13 +2,12 @@ import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 public class AnalisadorLexico {
-    public static void analisador(String linha, int indice) {
+    public static int analisador(String linha, int indice, LinkedList<Token> tokens, int controle)  {
         String input = linha;
-        LinkedList<Token> tokens = new LinkedList<>();
         Token tok1 = new Token(TipoToken.IniDelim, "[ ");;
         Token tok2 = new Token(TipoToken.FimDelim, "] ");;
 
-        StringTokenizer tokenizer = new StringTokenizer(input, "[] ");
+        StringTokenizer tokenizer = new StringTokenizer(input, "[]  ()");
         while (tokenizer.hasMoreTokens()) {
             String nome = tokenizer.nextToken();
             switch (nome) {
@@ -17,6 +16,7 @@ public class AnalisadorLexico {
                     tokens.add(tok1);
                     tokens.add(tokdec);
                     tokens.add(tok2);
+                    controle = 1;
                     break;
                 case "integer":
                     String[] partes = input.split(" ");
@@ -52,6 +52,7 @@ public class AnalisadorLexico {
                     tokens.add(tok1);
                     tokens.add(tokprog);
                     tokens.add(tok2);
+                    controle = 2;
                     break;
                 case "float":
                     Token tokfloat = new Token(TipoToken.PCReal, nome);
@@ -62,7 +63,26 @@ public class AnalisadorLexico {
                 case "read":
                     Token tokread = new Token(TipoToken.PCLer, nome);
                     tokens.add(tokread);
-                    // fazer outra classe para conferir se é uma variável valida
+                    // para pegar o que vem depois da palavra chave "read"
+                    String keyword = nome;
+                    String proximo = "";
+                    int index = input.indexOf(keyword);
+                    if (index != -1) {
+                    // Adiciona 1 ao índice para pular a palavra "read" e começar a partir do próximo caractere
+                    proximo = input.substring(index + keyword.length()).trim();
+                    }
+                    // fazer outra classe para conferir se é uma variável valida (declarada)
+                    boolean varOk = VerificaVar.verifica(proximo, tokens);
+                    if (varOk == true) {
+                        System.out.println("OKOK");
+                        Token tokvarOk = new Token(TipoToken.Var, proximo);
+                        tokens.add(tokvarOk);
+
+                    }
+                    else{
+                        System.out.println("ERRO var nao declarada linha: " + indice);
+                        // erro de var nao declarada
+                    }
 
 
                     break;
@@ -137,16 +157,24 @@ public class AnalisadorLexico {
                 case ")":
                     Token tokfechapar = new Token(TipoToken.FechaPar, nome);
                     tokens.add(tokfechapar);
-                    break;   
-                default:
-                    // Trate os casos não especificados aqui, se necessário
                     break;
+                case " ":
+                   
+                default:
+                    if (controle == 1){
+                        //está na parte de declaração de variaveis
+                        break;
+                    }else if(VerificaVar.verifica(nome, tokens) == true){
+                        Token tokvar = new Token(TipoToken.Var, nome);
+                        tokens.add(tokvar);
+                        break;
+
+                    }else{
+                        System.out.println("ERRO lexico desconhecido linha: " + indice);
+                    }
             }
         }
+        return controle;
 
-        // Imprime os tokens na lista encadeada
-        for (Token token : tokens) {
-            System.out.println(token);
-        }
     }
 }
