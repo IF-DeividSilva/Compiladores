@@ -12,7 +12,8 @@ public class AnalisadorLexico {
             String nome = tokenizer.nextToken();
             switch (nome) {
                 case "dec":
-                    Token tokdec = new Token(TipoToken.PCDec, nome);
+                    Token tokdec = new Token(TipoToken.PCDec, nome); 
+                    // pegar o caractere antes do d e verificar se é "[" e pegar o ultimo e verificar se é "]"
                     tokens.add(tok1);
                     tokens.add(tokdec);
                     tokens.add(tok2);
