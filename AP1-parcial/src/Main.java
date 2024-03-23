@@ -6,7 +6,10 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
        // if (args.length > 0) {
-            String nomeArq = "programa1.gyh";//args[0];
+            String nomeArq = "programa4.gyh";//args[0];
+            
+            PadronizaArquivo.padroniza(nomeArq);//
+            
             List<String> linhas = LerArquivo.lerArquivo(nomeArq);
             LinkedList<Token> tokens = new LinkedList<Token>();
             int controle = 0;

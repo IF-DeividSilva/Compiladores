@@ -4,107 +4,65 @@ import java.util.StringTokenizer;
 public class AnalisadorLexico {
     public static int analisador(String linha, int indice, LinkedList<Token> tokens, int controle)  {
         String input = linha;
-        Token tok1 = new Token(TipoToken.IniDelim, "[ ");;
-        Token tok2 = new Token(TipoToken.FimDelim, "] ");;
 
-        StringTokenizer tokenizer = new StringTokenizer(input, "[]  ()");
+        StringTokenizer tokenizer = new StringTokenizer(input, " ");
         while (tokenizer.hasMoreTokens()) {
             String nome = tokenizer.nextToken();
             switch (nome) {
+                case "[":
+                    Token tokabrecol = new Token(TipoToken.IniDelim, nome);
+                    tokens.add(tokabrecol);
+                    break;
+                case "]":
+                    Token tokfechacol = new Token(TipoToken.FimDelim, nome);
+                    tokens.add(tokfechacol);
+                    break;
+
                 case "dec":
                     Token tokdec = new Token(TipoToken.PCDec, nome); 
-                    // verifica se comessa em '['
-                    if (input.startsWith("[")) {
-                        tokens.add(tok1);
-                    // verifica se termina em ']'
-                    }
-                    tokens.add(tokdec);
-                    
-                    if (input.endsWith("]")) {
-                        tokens.add(tok2);
-                    } //else {
-                        //System.out.println("ERRO delimitador inválido linha: " + indice);
-                   // }
-                    
+                    tokens.add(tokdec);  
                     controle = 1;
-                    break;
-                    
-                case "integer":
-                    String[] partes = input.split("");
-                    String aux1 = partes[0];
-                    boolean auxx=ValidaVar.validaVar(aux1);
-                    if (auxx==true){
-                        Token tokvar = new Token(TipoToken.Var, aux1);
-                        tokens.add(tokvar);
-                    }
-                    else{
-                        System.out.println("ERRO var invalida linha: " + indice);
-                        // erro de var invalida
-                    }
+                    break;  
 
-                    if (partes.length >= 2) {
-                        // Corrigindo a linha para usar substring e dividila a string em duas partes
-                        int index = aux1.indexOf('[');
-                        if (index != -1) {
-                            aux1 = aux1.substring(index + 1); // Extrai tudo após o '['
-                        }
-                        String aux2 = partes[1];
-                        aux2 = aux2.replace("[", "").replace("]", "");
-                        Token tokint2 = new Token(TipoToken.PCInt, aux2);
-                        tokens.add(tok1);
-                        tokens.add(tokint2);
-                        tokens.add(tok2);
-                    }
+                case "integer":
+                    Token tokint2 = new Token(TipoToken.PCInt, nome);
+                    tokens.add(tokint2);
                     break;
                 
                 case "prog":
                     Token tokprog = new Token(TipoToken.PCProg, nome);
-                    if (input.startsWith("[")) {
-                        tokens.add(tok1);
-                    // verifica se termina em ']'
-                    } 
                     tokens.add(tokprog);
-                    if (input.endsWith("]")) {
-                        tokens.add(tok2);
-                    }
                     controle = 2;
                     break;
+
                 case "float":
                     Token tokfloat = new Token(TipoToken.PCReal, nome);
-                    tokens.add(tok1);
                     tokens.add(tokfloat);
-                    tokens.add(tok2);
                     break;
+
                 case "read":
                     Token tokread = new Token(TipoToken.PCLer, nome);
                     tokens.add(tokread);
-                    // para pegar o que vem depois da palavra chave "read"
-                    String keyword = nome;
-                    String proximo = "";
-                    int index = input.indexOf(keyword);
-                    if (index != -1) {
-                    // Adiciona 1 ao índice para pular a palavra "read" e começar a partir do próximo caractere
-                    proximo = input.substring(index + keyword.length()).trim();
-                    }
-                    // fazer outra classe para conferir se é uma variável valida (declarada)
-                    boolean varOk = VerificaVar.verifica(proximo, tokens);
-                    if (varOk == true) {
-                        System.out.println("OKOK");
-                    }
-                    else{
-                        System.out.println("ERRO var nao declarada linha: " + indice);
-                        // erro de var nao declarada
-                    }
-
-
                     break;
+
                 case "print":
                     Token tokprint = new Token(TipoToken.PCImprimir, nome);
-                    tokens.add(tokprint);    
+                    tokens.add(tokprint);
+                    
                     
                     // fazer verificacao de cadeia
+                    // ?????consigo fazer um case aspas duplas????????
+                    nome = tokenizer.nextToken();
+                    
+                    if (nome.equals("\"")){
+                        nome = tokenizer.nextToken();
+                        Token tocadeia = new Token(TipoToken.Cadeia, nome);
+                        tokens.add(tocadeia);
+                        nome = tokenizer.nextToken();
+                        break;
+                    }
 
-                break;
+
                 case "if":
                     Token tokif= new Token(TipoToken.PCSe, nome);
                     tokens.add(tokif); 
@@ -195,6 +153,15 @@ public class AnalisadorLexico {
                 default:
                     if (controle == 1){
                         //está na parte de declaração de variaveis
+                        boolean auxx=ValidaVar.validaVar(nome);
+                        if (auxx==true){
+                            Token tokvar = new Token(TipoToken.Var, nome);
+                            tokens.add(tokvar);
+                        }
+                        else{
+                            System.out.println("#Erro Léxico: <"+ nome +", linha: "+indice +">" );
+                            // erro de var invalida
+                        }
                         break;
                     }else if(VerificaVar.verifica(nome, tokens) == true){
                         Token tokvar = new Token(TipoToken.Var, nome);
@@ -206,7 +173,7 @@ public class AnalisadorLexico {
                         tokens.add(toknum);
                     }
                     else{
-                        System.out.println("ERRO lexico desconhecido linha: " + indice);
+                        System.out.println("#Erro Léxico: <"+ nome +", linha: "+indice +">" );
                     }
             }
         }

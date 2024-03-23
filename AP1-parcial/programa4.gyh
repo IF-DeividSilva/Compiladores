@@ -1,11 +1,11 @@
 #Erro Léxico: <_, linha: 19> caractere desconhecido
 
 
-[dec]
-Parametro [integer]
-Fatorial[integer]
+  [  dec  ]  
+Parametro   [  integer  ]  
+Fatorial  [  integer  ]  
 
-[prog]
+  [  prog  ]  
 # Calcula o fatorial de um número inteiro
 read Parametro
 Fatorial << Parametro
@@ -15,10 +15,10 @@ if Parametro == 0 then
 	end
 while Parametro > 1 then
 	start
-		Fatorial << Fatorial * (Parametro _ 1) 
+		Fatorial << Fatorial *   (  Parametro _ 1  )   
 		Parametro << Parametro - 1
 	
-print "--------@@@@@@"
+print   "  --------@@@@@@  "  
 print Fatorial
-print "--------&&&&&"
+print   "  --------&&&&&  "  
 

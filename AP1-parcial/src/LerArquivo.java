@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LerArquivo {
-    // Método para ler o arquivo e retornar as linhas processadas
+
+
     public static List<String> lerArquivo(String nomeArq) {
         List<String> linhasProcessadas = new ArrayList<>();
         try {
