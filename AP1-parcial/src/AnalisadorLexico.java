@@ -4,9 +4,10 @@ import java.util.StringTokenizer;
 public class AnalisadorLexico {
     public static int analisador(String linha, int indice, LinkedList<Token> tokens, int controle)  {
         String input = linha;
-
+        //tokenizer para quebrar as linhas em tokens onde tiver um espaço na linha e
         StringTokenizer tokenizer = new StringTokenizer(input, " ");
         while (tokenizer.hasMoreTokens()) {
+            //nome recebe o proximo token
             String nome = tokenizer.nextToken();
             switch (nome) {
                 case "[":
@@ -139,6 +140,8 @@ public class AnalisadorLexico {
                     tokens.add(tokmult);
                     break;        
                 default:
+                        // aux para validar var 
+                        // caso auxx seja true ele faz o tokens  
                         boolean auxx=ValidaVar.validaVar(nome);
                         if (auxx==true){
                             Token tokvar = new Token(TipoToken.Var, nome);
