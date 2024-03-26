@@ -11,7 +11,6 @@
  */
 import java.util.LinkedList;
 import java.util.List;
-// implementar o <EOF>
 //java Main programa1.gyh
 
 public class Main {
