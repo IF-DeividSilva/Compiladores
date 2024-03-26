@@ -17,43 +17,34 @@ public class AnalisadorLexico {
                     Token tokfechacol = new Token(TipoToken.FimDelim, nome);
                     tokens.add(tokfechacol);
                     break;
-
                 case "dec":
                     Token tokdec = new Token(TipoToken.PCDec, nome); 
                     tokens.add(tokdec);  
                     controle = 1;
                     break;  
-
                 case "integer":
                     Token tokint2 = new Token(TipoToken.PCInt, nome);
                     tokens.add(tokint2);
                     break;
-                
                 case "prog":
                     Token tokprog = new Token(TipoToken.PCProg, nome);
                     tokens.add(tokprog);
                     controle = 2;
                     break;
-
                 case "float":
                     Token tokfloat = new Token(TipoToken.PCReal, nome);
                     tokens.add(tokfloat);
                     break;
-
                 case "read":
                     Token tokread = new Token(TipoToken.PCLer, nome);
                     tokens.add(tokread);
                     break;
-
                 case "print":
                     Token tokprint = new Token(TipoToken.PCImprimir, nome);
                     tokens.add(tokprint);
-                    
-                    
                     // fazer verificacao de cadeia
                     // ?????consigo fazer um case aspas duplas????????
                     nome = tokenizer.nextToken();
-                    
                     if (nome.equals("\"")){
                         nome = tokenizer.nextToken();
                         Token tocadeia = new Token(TipoToken.Cadeia, nome);
@@ -61,8 +52,6 @@ public class AnalisadorLexico {
                         nome = tokenizer.nextToken();
                         break;
                     }
-
-
                 case "if":
                     Token tokif= new Token(TipoToken.PCSe, nome);
                     tokens.add(tokif); 
@@ -149,28 +138,18 @@ public class AnalisadorLexico {
                     Token tokmult = new Token(TipoToken.OpAritMult, nome);
                     tokens.add(tokmult);
                     break;        
-
                 default:
-                    if (controle == 1){
-                        //está na parte de declaração de variaveis
                         boolean auxx=ValidaVar.validaVar(nome);
                         if (auxx==true){
                             Token tokvar = new Token(TipoToken.Var, nome);
                             tokens.add(tokvar);
+                            break;
+                            
                         }
-                        else{
-                            System.out.println("#Erro Léxico: <"+ nome +", linha: "+indice +">" );
-                            // erro de var invalida
-                        }
-                        break;
-                    }else if(VerificaVar.verifica(nome, tokens) == true){
-                        Token tokvar = new Token(TipoToken.Var, nome);
-                        tokens.add(tokvar);
-                        break;
-
-                    }else if (nome.matches("[0-9]+")){
+                        if (nome.matches("[0-9]+")){
                         Token toknum = new Token(TipoToken.NumInt, nome);
                         tokens.add(toknum);
+                        break;
                     }
                     else{
                         System.out.println("#Erro Léxico: <"+ nome +", linha: "+indice +">" );
@@ -178,6 +157,5 @@ public class AnalisadorLexico {
             }
         }
         return controle;
-
     }
 }
