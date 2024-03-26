@@ -13,6 +13,9 @@ import java.util.LinkedList;
 import java.util.List;
 //java Main programa1.gyh
 
+// esse comeca o codigo 
+// por favor compile esse aqui 
+
 public class Main {
     public static void main(String[] args) {
          //for (int i = 0; i < args.length; i++){
