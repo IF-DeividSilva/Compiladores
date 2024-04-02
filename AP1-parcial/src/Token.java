@@ -11,7 +11,7 @@ public class Token {
 
     @Override
     public String toString() {
-        return "<" + tipoToken + ", " +  lexema + ">";
+        return "<" + tipoToken + ", " + '"' +lexema +'"'+ ">";
     }
 
     public TipoToken getTipoToken() {

@@ -4,11 +4,12 @@ import java.util.StringTokenizer;
 public class AnalisadorLexico {
     public static int analisador(String linha, int indice, LinkedList<Token> tokens, int controle)  {
         String input = linha;
-        //tokenizer para quebrar as linhas em tokens onde tiver um espaço na linha e
+        //tokenizer para quebrar as linhas em tokens onde tiver um espaço na linha
         StringTokenizer tokenizer = new StringTokenizer(input, " ");
         while (tokenizer.hasMoreTokens()) {
             //nome recebe o proximo token
             String nome = tokenizer.nextToken();
+            // cases para analisar e criar os tokens conforme sua classificacao
             switch (nome) {
                 case "[":
                     Token tokabrecol = new Token(TipoToken.IniDelim, nome);
@@ -40,19 +41,36 @@ public class AnalisadorLexico {
                     Token tokread = new Token(TipoToken.PCLer, nome);
                     tokens.add(tokread);
                     break;
-                case "print":
+                    case "print":
                     Token tokprint = new Token(TipoToken.PCImprimir, nome);
                     tokens.add(tokprint);
-                    // fazer verificacao de cadeia
-                    // ?????consigo fazer um case aspas duplas????????
-                    nome = tokenizer.nextToken();
-                    if (nome.equals("\"")){
-                        nome = tokenizer.nextToken();
-                        Token tocadeia = new Token(TipoToken.Cadeia, nome);
-                        tokens.add(tocadeia);
-                        nome = tokenizer.nextToken();
-                        break;
-                    }
+                    break;
+    
+                    case "\"":
+                    // caso tenha aspas duplas ele pega o proximo token e verifica se é uma cadeia de caracteres
+                    // se for ele salva um token
+                    // tbm tem uma verificacao para caso nao tenha aspas duplas no final da possivel cadeia, caso nao tenha configura um erro lexico
+                    // pois cadeia necessariamente tem que ter aspas duplas no inicio e no final
+                    // e se for só uma aspas dupla no começo sem nada tbm configura um erro lexico
+                    if(tokenizer.hasMoreTokens()){
+                            nome = tokenizer.nextToken();
+                            String aux1 = nome;
+                            if(tokenizer.hasMoreTokens()){
+                                nome = tokenizer.nextToken();
+                            } else {
+                                System.out.println("#Erro Léxico: <"+aux1 +", linha: "+indice +">" );
+                                break;
+                            }
+                            if (nome.equals("\"")){
+                                Token tocadeia = new Token(TipoToken.Cadeia, aux1);
+                                tokens.add(tocadeia);
+                                break;
+                            }
+                        } else {
+                            System.out.println("#Erro Léxico: <"+nome +", linha: "+indice +">" );
+                            break;
+                        }
+                
                 case "if":
                     Token tokif= new Token(TipoToken.PCSe, nome);
                     tokens.add(tokif); 
@@ -149,16 +167,26 @@ public class AnalisadorLexico {
                             break;
                             
                         }
+                        // para validar numero inteiro
                         if (nome.matches("[0-9]+")){
                         Token toknum = new Token(TipoToken.NumInt, nome);
                         tokens.add(toknum);
                         break;
-                    }
+                        }
+                        // para validar numero float
+                        if (nome.matches("[+-]?\\d*\\.?\\d+")) {
+                            Token toknum = new Token(TipoToken.NumReal, nome);
+                            tokens.add(toknum);
+                            break;
+                        }
+                        
                     else{
+                        // caso nao seja nenhum dos casos acima ele configura um erro lexico
                         System.out.println("#Erro Léxico: <"+ nome +", linha: "+indice +">" );
                     }
             }
         }
+        // retorna o controle para saber se está na parte de "dec" ou "prog"
         return controle;
     }
 }

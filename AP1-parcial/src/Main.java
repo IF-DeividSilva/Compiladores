@@ -13,8 +13,6 @@ import java.util.LinkedList;
 import java.util.List;
 //java Main programa1.gyh
 
-// esse comeca o codigo 
-// por favor compile esse aqui 
 
 public class Main {
     public static void main(String[] args) {
@@ -42,6 +40,7 @@ public class Main {
             }
 
             // for para colocar os tokens em um arquivo de saida
+            //**Erros estão sendo printados antes da lista de tokens**
             for (Token token : tokens) {
                 System.out.println(token);
             }

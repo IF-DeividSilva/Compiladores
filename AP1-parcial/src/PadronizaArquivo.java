@@ -3,7 +3,6 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-//import java.io.*;
 
 public class PadronizaArquivo {
     // Método para padronizar o arquivo
@@ -23,7 +22,7 @@ public class PadronizaArquivo {
             br.close();
             fr.close();
             
-            // Processar o conteúdo para adicionar espaços antes e depois de "[]()"
+            // Para adicionar espaços antes e depois dos delimitadores "[]()"
             String conteudoModificado = sb.toString().replaceAll("([\\[\\]\\(\\)\\\"])", " $1 ");
             
             // Salvar o conteúdo modificado de volta no arquivo

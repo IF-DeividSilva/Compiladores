@@ -6,7 +6,7 @@ import java.util.List;
 
 public class LerArquivo {
 
-
+    // Método para ler um arquivo e retornar uma lista de strings
     public static List<String> lerArquivo(String nomeArq) {
         List<String> linhasProcessadas = new ArrayList<>();
         try {
@@ -22,7 +22,8 @@ public class LerArquivo {
                 // Se '#' estiver no início da linha, deixa a linha vazia
                 if (indice == 0) {
                     linha = "";
-                } else if (indice != -1) { // Se '#' estiver em outra posição, ignora o que está depois
+                  // Se '#' estiver em outra posição, ignora o que está depois   
+                } else if (indice != -1) {
                     linha = linha.substring(0, indice);
                 }
                 // Adiciona a linha processada à lista, mesmo que esteja vazia
