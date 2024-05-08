@@ -114,7 +114,7 @@ public class AnalisadorSintatico {
         }else if (tokens.get(TokenIndex).getTipoToken() == TipoToken.Cadeia) {
             TokenIndex++;
         }else{
-            throw new RuntimeException("Erro Sintatico: Linha "+  tokens.get(TokenIndex).getLinha() + " Token esperado: VARIAVEL/CADEIA");
+            throw new RuntimeException("Erro Sintatico: Linha "+  tokens.get(TokenIndex).getLinha() + " Token inesperado: " + tokens.get(TokenIndex).getLexema());
         }    
     }
 
@@ -198,7 +198,7 @@ public class AnalisadorSintatico {
             expressaoAritimetica();
             match(")");
         }else {
-            throw new RuntimeException("Erro Sintatico: Linha "+  tokens.get(TokenIndex).getLinha() + " Token esperado: NUMERO/VARIAVEL/ABREPAR");
+            throw new RuntimeException("Erro Sintatico: Linha "+  tokens.get(TokenIndex).getLinha() + " Token inesperado: " + tokens.get(TokenIndex).getLexema());
         }
     }
     
@@ -259,7 +259,7 @@ public class AnalisadorSintatico {
         if (tokens.get(TokenIndex).getLexema().equals(lexema)) {
             TokenIndex++;
         } else {
-            throw new RuntimeException("Erro Sintatico: Linha "+ tokens.get(TokenIndex).getLinha() + " inesperado "+ tokens.get(TokenIndex-1).getLexema());
+            throw new RuntimeException("Erro Sintatico: Linha "+ tokens.get(TokenIndex).getLinha() + " inesperado "+ tokens.get(TokenIndex).getLexema());
         }
     }
 }

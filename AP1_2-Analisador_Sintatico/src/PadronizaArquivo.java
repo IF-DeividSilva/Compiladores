@@ -23,7 +23,8 @@ public class PadronizaArquivo {
             fr.close();
             
             // Para adicionar espaços antes e depois dos delimitadores "[]()"
-            String conteudoModificado = sb.toString().replaceAll("([<>])", " $1 ");
+            String conteudoModificado = sb.toString().replaceAll("([\\[\\]\\(\\)\\\"])", " $1 ");
+            
             // Salvar o conteúdo modificado de volta no arquivo
             FileWriter fw = new FileWriter(arq);
             BufferedWriter bw = new BufferedWriter(fw);

@@ -188,6 +188,21 @@ public class AnalisadorLexico {
                             Token toknum = new Token(TipoToken.NumReal, nome, indice);
                             tokens.add(toknum);
                             break;
+                        }    // Verificar se o token contém < ou >
+                        if (nome.contains("<") || nome.contains(">")) {
+                            // Processar os operadores < e >
+                            // Supondo que você queira tratar < e > como operadores de comparação
+                            // Você pode precisar ajustar esta lógica conforme a semântica da sua linguagem
+                            if (nome.contains("<<")) {
+                                Token tokAtrib = new Token(TipoToken.Atrib, "<<", indice);
+                                tokens.add(tokAtrib);
+                            }
+                            if (nome.contains(">")) {
+                                Token tokMaior = new Token(TipoToken.OpRelMaior, ">", indice);
+                                tokens.add(tokMaior);
+                            }
+                            // Aqui você pode adicionar mais lógica para tratar outros operadores de comparação
+                            break;
                         }
                         
                     else{

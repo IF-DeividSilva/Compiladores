@@ -1,10 +1,10 @@
-#Erro Sintatico: Linha 5       (      inesperado 'integer'      )      
+#Erro Sintatico: Linha 5        (       inesperado 'integer'       )       
 
-      [      dec      ]      
-Parametro       [      integer      ]      
-      [      integer      ]      
+       [       dec       ]       
+Parametro        [       integer       ]       
+       [       integer       ]       
 
-      [      prog      ]      
+       [       prog       ]       
 # Calcula o fatorial de um número inteiro
 read Parametro
 Fatorial << Parametro
@@ -17,7 +17,7 @@ while Parametro > 1 then
 		Fatorial << Fatorial * Parametro - 1
 		Parametro << Parametro - 1
 	end
-print       "      --------@@@@@@      "      
+print        "       --------@@@@@@       "       
 print Fatorial
-print       "      --------&&&&&      "      
+print        "       --------&&&&&       "       
 
