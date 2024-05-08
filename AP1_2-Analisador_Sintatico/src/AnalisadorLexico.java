@@ -72,11 +72,6 @@ public class AnalisadorLexico {
                         }
                     }
                 
-                    // Verifica se o loop terminou sem encontrar uma aspa dupla de fechamento
-                    if (!cadeiaBuilder.toString().endsWith("\"")) {
-                        // Se não encontrou, configura um erro léxico
-                        System.out.println("#Erro Léxico: <" + cadeiaBuilder.toString() + ", linha: " + indice + ">");
-                    }
                     break; // Sai do switch
                 
                 

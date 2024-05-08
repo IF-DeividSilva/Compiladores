@@ -34,8 +34,9 @@ public class AnalisadorSintatico {
         // pois ja foi verificado pelo analizador lexico 
         // provavel ja estar certo
         // arrumar para fazer uma lista de variaveis --nop yet--
-
-        match(tokens.get(TokenIndex).getLexema());
+        if(tokens.get(TokenIndex).getTipoToken() == TipoToken.Var){
+            match(tokens.get(TokenIndex).getLexema());
+        }
         match("[");
         tipoVar();
         match("]");
@@ -233,22 +234,22 @@ public class AnalisadorSintatico {
         }else{
             expressaoAritimetica();
             if(tokens.get(TokenIndex).getTipoToken() == TipoToken.OpRelDif){
-                match("<>");
+                match(tokens.get(TokenIndex).getLexema());
                 expressaoAritimetica();
             } else if(tokens.get(TokenIndex).getTipoToken() == TipoToken.OpRelIgual){
-                match("==");
+                match(tokens.get(TokenIndex).getLexema());
                 expressaoAritimetica();
             } else if(tokens.get(TokenIndex).getTipoToken() == TipoToken.OpRelMaior){
-                match(">");
+                match(tokens.get(TokenIndex).getLexema());
                 expressaoAritimetica();
             } else if(tokens.get(TokenIndex).getTipoToken() == TipoToken.OpRelMaiorIgual){
-                match(">=");
+                match(tokens.get(TokenIndex).getLexema());
                 expressaoAritimetica();
             } else if(tokens.get(TokenIndex).getTipoToken() == TipoToken.OpRelMenor){
-                match("<");
+                match(tokens.get(TokenIndex).getLexema());
                 expressaoAritimetica();
             } else if(tokens.get(TokenIndex).getTipoToken() == TipoToken.OpRelMenorIgual){
-                match("<=");
+                match(tokens.get(TokenIndex).getLexema());
                 expressaoAritimetica();
             }
         }

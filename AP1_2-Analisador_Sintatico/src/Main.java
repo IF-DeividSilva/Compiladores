@@ -17,7 +17,7 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
          //for (int i = 0; i < args.length; i++){
-            String nomeArq = "programa12.gyh";//args[0];
+            String nomeArq = "programa11.gyh";//args[0];
             // chama o metodo da class padroniza para add um espaço antes e dps dos delimitadores
             PadronizaArquivo.padroniza(nomeArq);
 
