@@ -11,13 +11,13 @@
  */
 import java.util.LinkedList;
 import java.util.List;
-//java Main programa1.gyh
+//java Main programa2.gyh
 
 
 public class Main {
     public static void main(String[] args) {
          //for (int i = 0; i < args.length; i++){
-            String nomeArq = "programa2.gyh";//args[0];
+            String nomeArq = "programa10.gyh";//args[0];
             // chama o metodo da class padroniza para add um espaço antes e dps dos delimitadores
             PadronizaArquivo.padroniza(nomeArq);
 
@@ -38,15 +38,17 @@ public class Main {
                 indice++;
                 controle = AnalisadorLexico.analisador (linha, indice, tokens, controle);
             }
-            new Token(TipoToken.FimArq, "EOF", indice);
+            
+            tokens.add(new Token(TipoToken.FimArq, "EOF", indice));
 
-            AnalisadorSemantico analisador = new AnalisadorSemantico(tokens);
-            analisador.analisar();
-            // for para colocar os tokens em um arquivo de saida
-            //**Erros estão sendo printados antes da lista de tokens**
             for (Token token : tokens) {
                 System.out.println(token);
             }
+            AnalisadorSintatico analisador = new AnalisadorSintatico(tokens);
+            analisador.analisar();
+            System.out.println("Nenhum erro sintatico encontrado");
+            // for para colocar os tokens em um arquivo de saida
+            //**Erros estão sendo printados antes da lista de tokens**
            // System.out.println("<EOF>");
             
     //}

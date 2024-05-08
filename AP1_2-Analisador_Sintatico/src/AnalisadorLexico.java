@@ -45,31 +45,41 @@ public class AnalisadorLexico {
                     Token tokprint = new Token(TipoToken.PCImprimir, nome, indice);
                     tokens.add(tokprint);
                     break;
-    
+
+                    
                     case "\"":
-                    // caso tenha aspas duplas ele pega o proximo token e verifica se é uma cadeia de caracteres
-                    // se for ele salva um token
-                    // tbm tem uma verificacao para caso nao tenha aspas duplas no final da possivel cadeia, caso nao tenha configura um erro lexico
-                    // pois cadeia necessariamente tem que ter aspas duplas no inicio e no final
-                    // e se for só uma aspas dupla no começo sem nada tbm configura um erro lexico
-                    if(tokenizer.hasMoreTokens()){
-                            nome = tokenizer.nextToken();
-                            String aux1 = nome;
-                            if(tokenizer.hasMoreTokens()){
-                                nome = tokenizer.nextToken();
-                            } else {
-                                System.out.println("#Erro Léxico: <"+aux1 +", linha: "+indice +">" );
-                                break;
-                            }
-                            if (nome.equals("\"")){
-                                Token tocadeia = new Token(TipoToken.Cadeia, aux1, indice);
-                                tokens.add(tocadeia);
-                                break;
-                            }
+                    // Inicializa uma string para armazenar a cadeia de caracteres
+                    StringBuilder cadeiaBuilder = new StringBuilder();
+                
+                    // Loop para coletar todos os tokens até encontrar uma aspa dupla de fechamento
+                    while (tokenizer.hasMoreTokens()) {
+                        String tokenAtual = tokenizer.nextToken();
+                
+                        // Verifica se o token atual é uma aspa dupla de fechamento
+                        if (tokenAtual.equals("\"")) {
+                            // Se for, não adiciona a aspa dupla de fechamento à cadeia
+                            // Cria um novo token com a cadeia construída até agora
+                            Token tocadeia = new Token(TipoToken.Cadeia, cadeiaBuilder.toString(), indice);
+                            tokens.add(tocadeia);
+                            break; // Sai do loop
                         } else {
-                            System.out.println("#Erro Léxico: <"+nome +", linha: "+indice +">" );
-                            break;
+                            // Adiciona o token atual à cadeia
+                            cadeiaBuilder.append(tokenAtual);
+                            // Adiciona um espaço após o token, exceto após a aspa dupla de fechamento
+                            if (tokenizer.hasMoreTokens()) {
+                                cadeiaBuilder.append(" ");
+                            }
                         }
+                    }
+                
+                    // Verifica se o loop terminou sem encontrar uma aspa dupla de fechamento
+                    if (!cadeiaBuilder.toString().endsWith("\"")) {
+                        // Se não encontrou, configura um erro léxico
+                        System.out.println("#Erro Léxico: <" + cadeiaBuilder.toString() + ", linha: " + indice + ">");
+                    }
+                    break; // Sai do switch
+                
+                
                 
                 case "if":
                     Token tokif= new Token(TipoToken.PCSe, nome, indice);
