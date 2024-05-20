@@ -32,7 +32,7 @@ public class PadronizaArquivo {
             bw.close();
             fw.close();
             
-            System.out.println("Espaços adicionados com sucesso.");
+            //System.out.println("Espaços adicionados com sucesso.");
         } catch (IOException e) {
             e.printStackTrace();
         }

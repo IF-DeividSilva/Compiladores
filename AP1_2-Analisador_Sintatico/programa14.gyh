@@ -1,0 +1,10 @@
+#Erro Sintático: Linha 17            (           inesperada Cadeia           )           
+           [           dec           ]           
+Parametro            [           integer           ]           
+Fatorial           [           integer           ]           
+
+           [           prog           ]           
+# Calcula o fatorial de um número inteiro
+
+print Fatorial
+Prit            "           Programa funcionando           "           
