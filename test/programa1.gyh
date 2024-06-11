@@ -1,0 +1,11 @@
+[dec]
+Parametro [integer]
+Fatorial[float]
+
+[prog]
+# Calcula o fatorial de um número inteiro
+read Parametro
+Fatorial << Parametro
+
+print Fatorial
+print "gflfpaf545"
