@@ -1,0 +1,14 @@
+IniDelim=1
+FimDelim=2
+Atrib=3
+OpRel=4
+PCProg=5
+PCDec=6
+Var=7
+Cadeia=8
+NumInt=9
+'['=1
+']'=2
+'<<'=3
+'prog'=5
+'dec'=6
