@@ -43,7 +43,7 @@ grammar GyhRepaginadoLanguage;
 	}
 	public void verificaVar(String nome){
 		if(!_tabelaSimbolo.exists(nome)){
-		System.out.println("\n Erro semantico, variavel nao declarada"+nome);
+		System.out.println("\n Erro semantico, variavel nao declarada "+nome);
 		} 
 	}
 	public void printComandos(ArrayList<Comando> comandos) {
@@ -76,7 +76,7 @@ declaracao: Var IniDelim (PCInt | PCReal) FimDelim
 			  	System.out.println("Erro semantico >> redeclaracao de variavel: "+_nomeVar);
 			  }	  
 			};//declaracao de variÃ¡veis
-
+variÃ¡veis
 expressaoAritmetica: termoAritmetico expressaoAritmeticalinha;
 
 expressaoAritmeticalinha: 
@@ -139,7 +139,11 @@ comandoSaida: PCImprimir  (Var
 						    _pilhaComandos.peek().add(cmd);
 						   }
 						    
-							|Cadeia);
+							|Cadeia {
+								ComandoEscrita cmd = new ComandoEscrita();
+								cmd.setCadeia(_input.LT(-1).getText());
+								_pilhaComandos.peek().add(cmd);
+							});
 
 
 comandoCondicao:  PCSe {_varExp=""; _varCondicao=""; _varCondicaoif="";}
