@@ -126,6 +126,18 @@ public class GyhRepaginadoLanguageBaseListener implements GyhRepaginadoLanguageL
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterExpressaoRelacional1(GyhRepaginadoLanguageParser.ExpressaoRelacional1Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExpressaoRelacional1(GyhRepaginadoLanguageParser.ExpressaoRelacional1Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterTermoRelacional(GyhRepaginadoLanguageParser.TermoRelacionalContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -210,6 +222,18 @@ public class GyhRepaginadoLanguageBaseListener implements GyhRepaginadoLanguageL
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterComandoRepeticao(GyhRepaginadoLanguageParser.ComandoRepeticaoContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitComandoRepeticao(GyhRepaginadoLanguageParser.ComandoRepeticaoContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterSubAlgoritmo(GyhRepaginadoLanguageParser.SubAlgoritmoContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -229,18 +253,6 @@ public class GyhRepaginadoLanguageBaseListener implements GyhRepaginadoLanguageL
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitComandoAtribuicao(GyhRepaginadoLanguageParser.ComandoAtribuicaoContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterComandoRepeticao(GyhRepaginadoLanguageParser.ComandoRepeticaoContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitComandoRepeticao(GyhRepaginadoLanguageParser.ComandoRepeticaoContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

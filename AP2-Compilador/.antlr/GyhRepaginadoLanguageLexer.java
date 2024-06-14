@@ -102,13 +102,20 @@ public class GyhRepaginadoLanguageLexer extends Lexer {
 		
 		private Simbolo _simboloVar;
 		
+		private Stack<String> _pilhaCondicao = new Stack<String>();
 		private String _varCondicao;
+		private String _varCondicaoif;
+		private String _varCondicaowhile;
 		private String _varAux;
 		//======
 		private GeraCodigo prog = new GeraCodigo(); 
 		
 		private ArrayList<Comando> listCmd = new ArrayList<Comando>(); 
 		private ArrayList<Comando> listCmdAux = new ArrayList<Comando>();
+		private ArrayList<Comando> listCmdAux1 = new ArrayList<Comando>();
+
+		private Stack<ArrayList<Comando>>  _pilhaComandos = new Stack<ArrayList<Comando>>();
+		private ArrayList<Comando> _bclComandos;
 
 		private ArrayList<Comando> _listTrue = new ArrayList<Comando>();
 		private ArrayList<Comando> _listFalse = new ArrayList<Comando>();
@@ -128,8 +135,13 @@ public class GyhRepaginadoLanguageLexer extends Lexer {
 		public void verificaVar(String nome){
 			if(!_tabelaSimbolo.exists(nome)){
 			System.out.println("\n Erro semantico, variavel nao declarada"+nome);
+			} 
+		}
+		public void printComandos(ArrayList<Comando> comandos) {
+			for (Comando comando : comandos) {
+				System.out.println(comando.toString());
 			}
-		} 
+		}
 
 
 	public GyhRepaginadoLanguageLexer(CharStream input) {

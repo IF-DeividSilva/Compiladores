@@ -11,13 +11,20 @@ grammar GyhRepaginadoLanguage;
 	
 	private Simbolo _simboloVar;
 	
+	private Stack<String> _pilhaCondicao = new Stack<String>();
 	private String _varCondicao;
+	private String _varCondicaoif;
+	private String _varCondicaowhile;
 	private String _varAux;
 	//======
 	private GeraCodigo prog = new GeraCodigo(); 
 	
 	private ArrayList<Comando> listCmd = new ArrayList<Comando>(); 
 	private ArrayList<Comando> listCmdAux = new ArrayList<Comando>();
+	private ArrayList<Comando> listCmdAux1 = new ArrayList<Comando>();
+
+	private Stack<ArrayList<Comando>>  _pilhaComandos = new Stack<ArrayList<Comando>>();
+	private ArrayList<Comando> _bclComandos;
 
 	private ArrayList<Comando> _listTrue = new ArrayList<Comando>();
 	private ArrayList<Comando> _listFalse = new ArrayList<Comando>();
@@ -37,15 +44,20 @@ grammar GyhRepaginadoLanguage;
 	public void verificaVar(String nome){
 		if(!_tabelaSimbolo.exists(nome)){
 		System.out.println("\n Erro semantico, variavel nao declarada"+nome);
+		} 
+	}
+	public void printComandos(ArrayList<Comando> comandos) {
+		for (Comando comando : comandos) {
+			System.out.println(comando.toString());
 		}
-	} 
+	}
 }
 
 
 programa: IniDelim PCDec FimDelim listaDeclaracoes 
 		  IniDelim PCProg FimDelim listaComandos 
 		  { prog.setTabela(_tabelaSimbolo);
-		  	prog.setComando(listCmd);
+		  	prog.setComando(_pilhaComandos.pop());
 		    prog.geradorCodigo();
 		    imprimeTabelaSimbolo(_tabelaSimbolo); System.out.println("\nAnalise Sintatica finalizada com sucesso! "); };
 
@@ -63,7 +75,7 @@ declaracao: Var IniDelim (PCInt | PCReal) FimDelim
 			  else{
 			  	System.out.println("Erro semantico >> redeclaracao de variavel: "+_nomeVar);
 			  }	  
-			};//declaracao de variáveis
+			};//declaracao de variÃ¡veis
 
 expressaoAritmetica: termoAritmetico expressaoAritmeticalinha;
 
@@ -87,8 +99,11 @@ fatorAritmetico:  NumInt  {_varExp += _input.LT(-1).getText();}
 
 //Colocar ExpressaoRelacional, TermoRelacional, OperadorBooleano
 
-expressaoRelacional: (termoRelacional operadorBooleano  {_varCondicao+=" "+_input.LT(-1).getText()+" ";}
-					)* termoRelacional ;
+expressaoRelacional: termoRelacional expressaoRelacional1;
+
+expressaoRelacional1: (operadorBooleano  {_varCondicao+=" ";
+										if(_input.LT(-1).getText().equals("and")){_varCondicao+="&& ";} 
+										else{_varCondicao+="|| ";}}termoRelacional expressaoRelacional1)?;
 
 termoRelacional: expressaoAritmetica    {_varCondicao+=_varExp; _varExp=" ";}
 				 OpRel                  {_varCondicao+=" ";_varCondicao+=_input.LT(-1).getText();}
@@ -101,12 +116,8 @@ termoRelacional: expressaoAritmetica    {_varCondicao+=_varExp; _varExp=" ";}
 
 operadorBooleano: 'or'| 'and';
 
-listaComandos: (comando 
-					{
-					   listCmd.addAll(listCmdAux);
-					   listCmdAux.removeAll(listCmdAux);
-					 }
-			   )+;
+listaComandos: {_bclComandos = new ArrayList<Comando>();
+				_pilhaComandos.push(_bclComandos);} (comando )+;
 
 comando: comandoEntrada | comandoSaida | comandoCondicao  |comandoAtribuicao| subAlgoritmo|comandoRepeticao ; //arrumar isso aqui!!!! (BOTAR O REPTICAO)
 
@@ -118,37 +129,62 @@ comandoEntrada: PCLer Var
 						 { verificaVar(_input.LT(-1).getText());
 						    ComandoLeitura cmd = new ComandoLeitura();
 						    cmd.setId(_input.LT(-1).getText());
-						    listCmdAux.add(cmd);
+						    _pilhaComandos.peek().add(cmd);
 						   };
 
 comandoSaida: PCImprimir  (Var
 						   { verificaVar(_input.LT(-1).getText());
 						     ComandoEscrita cmd = new ComandoEscrita();
 						     cmd.setId(_input.LT(-1).getText());
-						     listCmdAux.add(cmd);
+						    _pilhaComandos.peek().add(cmd);
 						   }
 						    
 							|Cadeia);
 
 
-comandoCondicao:  PCSe {_varExp=""; _varCondicao="";}
-				  expressaoRelacional PCEntao comando
+comandoCondicao:  PCSe {_varExp=""; _varCondicao=""; _varCondicaoif="";}
+				  expressaoRelacional PCEntao {
+					_bclComandos = new ArrayList<Comando>(); 
+					_pilhaComandos.push(_bclComandos);
+					_pilhaCondicao.push(_varCondicao);
+					}comando
 				  {
-				  	_listTrue.addAll(listCmdAux);
-				  	listCmdAux.removeAll(listCmdAux);
+				  	_listTrue = _pilhaComandos.pop();
 				  } 
-				  (PCSenao comando
+				  (PCSenao
 				  {
-				  	_listFalse.addAll(listCmdAux);
-				  	listCmdAux.removeAll(listCmdAux);
+					_bclComandos = new ArrayList<Comando>(); 
+					_pilhaComandos.push(_bclComandos);
+				  }
+				   comando
+				  {
+				  	_listFalse = _pilhaComandos.pop();
 				  }
 				  )?
-				  {ComandoCondicao cmd= new ComandoCondicao(_varCondicao, _listTrue, _listFalse);
-				   listCmdAux.add(cmd); };
+				  {
+					_varCondicaoif= _pilhaCondicao.pop();
+					ComandoCondicao cmd= new ComandoCondicao(_varCondicaoif, _listTrue, _listFalse);
+				   _pilhaComandos.peek().add(cmd); };
 				  
 
+comandoRepeticao: PCEnqto {_varExp=""; _varCondicaowhile=""; _varCondicao="";}
+                    expressaoRelacional PCEntao 
+					{
+						_bclComandos = new ArrayList<Comando>();
+						_pilhaComandos.push(_bclComandos);
+						_pilhaCondicao.push(_varCondicao);
+					}
+					comando
+                    {
+                    listCmdAux = _pilhaComandos.pop();
+					_varCondicaowhile = _pilhaCondicao.pop(); 
+                    ComandoRepeticao cmd = new ComandoRepeticao(_varCondicaowhile, listCmdAux);
+                    _pilhaComandos.peek().add(cmd);
+                    };
 
-subAlgoritmo: PCIni (comando)+ PCFim;
+
+subAlgoritmo: PCIni
+			 (comando)+ PCFim;
 
 
 comandoAtribuicao:  Var 
@@ -160,19 +196,11 @@ comandoAtribuicao:  Var
 					Atrib expressaoAritmetica
 					{
 					   ComandoAtribuicao cmd=new ComandoAtribuicao(_varId, _varExp);
-					   listCmdAux.add(cmd); 	
+					   _pilhaComandos.peek().add(cmd); 	
 					};
 
 
 
-comandoRepeticao: PCEnqto {_varExp=""; _varCondicao="";}
-					expressaoRelacional PCEntao comando
-					{
-					_listTrue.addAll(listCmdAux);
-					listCmdAux.removeAll(listCmdAux);
-					ComandoRepeticao cmd = new ComandoRepeticao(_varCondicao, _listTrue);
-					listCmdAux.add(cmd);
-					};
 
 //==========
 
@@ -211,9 +239,3 @@ NumReal: [0-9]+ '.' [0-9]+;
 WS: (' ' | '\n' | '\t')->skip;
 
 Comentario: '#' ~('\n')* ->skip;
-
-
-
-
-
-

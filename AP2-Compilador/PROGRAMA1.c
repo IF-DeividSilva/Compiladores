@@ -5,15 +5,22 @@
 #include <string.h>
 
  int main(void){
-	int Fat; 
+	int Parametro; 
 	int Fatorial; 
-	int ]; 
 
-	scanf("%d", &Parametro);
+	 if( Parametro == 0 ||  Fatorial == 5 ){
+
+	Fatorial = 1;
 	 if( Parametro > 1 ){
 
-	Fatorial = Fatorial * Parametro - 1;
-	Parametro = Parametro - 1;
+	 while( Fatorial < 33 ){
+
+	scanf("%d", &Parametro);
+	 }
+
+	Parametro = 66;
+	 }
+
 	 }
 
  	return 0;

@@ -1,14 +1,18 @@
 [dec]
-parametro [integer]
+Parametro [integer]
 Fatorial[integer]
-Fat[integer]
 
 [prog]
 # Calcula o fatorial de um número inteiro
-read Parametro
-if Parametro > 1 then
+if Parametro == 0 or Fatorial == 5 then 
 	start
-		Fatorial << Fatorial * Parametro - 1
-		Parametro << Parametro - 1
+	Fatorial << 1
+	if Parametro > 1 then
+		start
+		while Fatorial < 33 then
+		start
+		read Parametro
+		end
+		Parametro <<  66
+	end 
 	end
-

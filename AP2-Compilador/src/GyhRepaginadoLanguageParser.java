@@ -27,17 +27,17 @@ public class GyhRepaginadoLanguageParser extends Parser {
 	public static final int
 		RULE_programa = 0, RULE_listaDeclaracoes = 1, RULE_declaracao = 2, RULE_expressaoAritmetica = 3, 
 		RULE_expressaoAritmeticalinha = 4, RULE_termoAritmetico = 5, RULE_termoAritmeticolinha = 6, 
-		RULE_fatorAritmetico = 7, RULE_expressaoRelacional = 8, RULE_termoRelacional = 9, 
-		RULE_operadorBooleano = 10, RULE_listaComandos = 11, RULE_comando = 12, 
-		RULE_comandoEntrada = 13, RULE_comandoSaida = 14, RULE_comandoCondicao = 15, 
-		RULE_subAlgoritmo = 16, RULE_comandoAtribuicao = 17, RULE_comandoRepeticao = 18;
+		RULE_fatorAritmetico = 7, RULE_expressaoRelacional = 8, RULE_expressaoRelacional1 = 9, 
+		RULE_termoRelacional = 10, RULE_operadorBooleano = 11, RULE_listaComandos = 12, 
+		RULE_comando = 13, RULE_comandoEntrada = 14, RULE_comandoSaida = 15, RULE_comandoCondicao = 16, 
+		RULE_comandoRepeticao = 17, RULE_subAlgoritmo = 18, RULE_comandoAtribuicao = 19;
 	private static String[] makeRuleNames() {
 		return new String[] {
 			"programa", "listaDeclaracoes", "declaracao", "expressaoAritmetica", 
 			"expressaoAritmeticalinha", "termoAritmetico", "termoAritmeticolinha", 
-			"fatorAritmetico", "expressaoRelacional", "termoRelacional", "operadorBooleano", 
-			"listaComandos", "comando", "comandoEntrada", "comandoSaida", "comandoCondicao", 
-			"subAlgoritmo", "comandoAtribuicao", "comandoRepeticao"
+			"fatorAritmetico", "expressaoRelacional", "expressaoRelacional1", "termoRelacional", 
+			"operadorBooleano", "listaComandos", "comando", "comandoEntrada", "comandoSaida", 
+			"comandoCondicao", "comandoRepeticao", "subAlgoritmo", "comandoAtribuicao"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -113,13 +113,20 @@ public class GyhRepaginadoLanguageParser extends Parser {
 		
 		private Simbolo _simboloVar;
 		
+		private Stack<String> _pilhaCondicao = new Stack<String>();
 		private String _varCondicao;
+		private String _varCondicaoif;
+		private String _varCondicaowhile;
 		private String _varAux;
 		//======
 		private GeraCodigo prog = new GeraCodigo(); 
 		
 		private ArrayList<Comando> listCmd = new ArrayList<Comando>(); 
 		private ArrayList<Comando> listCmdAux = new ArrayList<Comando>();
+		private ArrayList<Comando> listCmdAux1 = new ArrayList<Comando>();
+
+		private Stack<ArrayList<Comando>>  _pilhaComandos = new Stack<ArrayList<Comando>>();
+		private ArrayList<Comando> _bclComandos;
 
 		private ArrayList<Comando> _listTrue = new ArrayList<Comando>();
 		private ArrayList<Comando> _listFalse = new ArrayList<Comando>();
@@ -139,8 +146,13 @@ public class GyhRepaginadoLanguageParser extends Parser {
 		public void verificaVar(String nome){
 			if(!_tabelaSimbolo.exists(nome)){
 			System.out.println("\n Erro semantico, variavel nao declarada"+nome);
+			} 
+		}
+		public void printComandos(ArrayList<Comando> comandos) {
+			for (Comando comando : comandos) {
+				System.out.println(comando.toString());
 			}
-		} 
+		}
 
 	public GyhRepaginadoLanguageParser(TokenStream input) {
 		super(input);
@@ -184,24 +196,24 @@ public class GyhRepaginadoLanguageParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(38);
-			match(IniDelim);
-			setState(39);
-			match(PCDec);
 			setState(40);
-			match(FimDelim);
-			setState(41);
-			listaDeclaracoes();
-			setState(42);
 			match(IniDelim);
-			setState(43);
-			match(PCProg);
-			setState(44);
+			setState(41);
+			match(PCDec);
+			setState(42);
 			match(FimDelim);
+			setState(43);
+			listaDeclaracoes();
+			setState(44);
+			match(IniDelim);
 			setState(45);
+			match(PCProg);
+			setState(46);
+			match(FimDelim);
+			setState(47);
 			listaComandos();
 			 prog.setTabela(_tabelaSimbolo);
-					  	prog.setComando(listCmd);
+					  	prog.setComando(_pilhaComandos.pop());
 					    prog.geradorCodigo();
 					    imprimeTabelaSimbolo(_tabelaSimbolo); System.out.println("\nAnalise Sintatica finalizada com sucesso! "); 
 			}
@@ -245,14 +257,14 @@ public class GyhRepaginadoLanguageParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(48);
-			declaracao();
 			setState(50);
+			declaracao();
+			setState(52);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==Var) {
 				{
-				setState(49);
+				setState(51);
 				listaDeclaracoes();
 				}
 			}
@@ -297,11 +309,11 @@ public class GyhRepaginadoLanguageParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(52);
-			match(Var);
-			setState(53);
-			match(IniDelim);
 			setState(54);
+			match(Var);
+			setState(55);
+			match(IniDelim);
+			setState(56);
 			_la = _input.LA(1);
 			if ( !(_la==PCInt || _la==PCReal) ) {
 			_errHandler.recoverInline(this);
@@ -311,7 +323,7 @@ public class GyhRepaginadoLanguageParser extends Parser {
 				_errHandler.reportMatch(this);
 				consume();
 			}
-			setState(55);
+			setState(57);
 			match(FimDelim);
 			 _nomeVar= _input.LT(-4).getText();
 						  _tipoVar= _input.LT(-2).getText();
@@ -365,9 +377,9 @@ public class GyhRepaginadoLanguageParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(58);
+			setState(60);
 			termoAritmetico();
-			setState(59);
+			setState(61);
 			expressaoAritmeticalinha();
 			}
 		}
@@ -408,23 +420,23 @@ public class GyhRepaginadoLanguageParser extends Parser {
 		enterRule(_localctx, 8, RULE_expressaoAritmeticalinha);
 		int _la;
 		try {
-			setState(75);
+			setState(77);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,3,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(66);
+				setState(68);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==T__0) {
 					{
-					setState(61);
+					setState(63);
 					match(T__0);
 					_varExp += " + ";
-					setState(63);
+					setState(65);
 					termoAritmetico();
-					setState(64);
+					setState(66);
 					expressaoAritmeticalinha();
 					}
 				}
@@ -434,17 +446,17 @@ public class GyhRepaginadoLanguageParser extends Parser {
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(73);
+				setState(75);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==T__1) {
 					{
-					setState(68);
+					setState(70);
 					match(T__1);
 					_varExp += " - ";
-					setState(70);
+					setState(72);
 					termoAritmetico();
-					setState(71);
+					setState(73);
 					expressaoAritmeticalinha();
 					}
 				}
@@ -491,9 +503,9 @@ public class GyhRepaginadoLanguageParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(77);
+			setState(79);
 			fatorAritmetico();
-			setState(78);
+			setState(80);
 			termoAritmeticolinha();
 			}
 		}
@@ -534,23 +546,23 @@ public class GyhRepaginadoLanguageParser extends Parser {
 		enterRule(_localctx, 12, RULE_termoAritmeticolinha);
 		int _la;
 		try {
-			setState(94);
+			setState(96);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,6,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(85);
+				setState(87);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==T__2) {
 					{
-					setState(80);
+					setState(82);
 					match(T__2);
 					_varExp += " * ";
-					setState(82);
+					setState(84);
 					fatorAritmetico();
-					setState(83);
+					setState(85);
 					termoAritmeticolinha();
 					}
 				}
@@ -560,17 +572,17 @@ public class GyhRepaginadoLanguageParser extends Parser {
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(92);
+				setState(94);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==T__3) {
 					{
-					setState(87);
+					setState(89);
 					match(T__3);
 					_varExp += " / ";
-					setState(89);
+					setState(91);
 					fatorAritmetico();
-					setState(90);
+					setState(92);
 					termoAritmeticolinha();
 					}
 				}
@@ -617,13 +629,13 @@ public class GyhRepaginadoLanguageParser extends Parser {
 		FatorAritmeticoContext _localctx = new FatorAritmeticoContext(_ctx, getState());
 		enterRule(_localctx, 14, RULE_fatorAritmetico);
 		try {
-			setState(108);
+			setState(110);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case NumInt:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(96);
+				setState(98);
 				match(NumInt);
 				_varExp += _input.LT(-1).getText();
 				}
@@ -631,7 +643,7 @@ public class GyhRepaginadoLanguageParser extends Parser {
 			case NumReal:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(98);
+				setState(100);
 				match(NumReal);
 				_varExp += _input.LT(-1).getText();
 				}
@@ -639,7 +651,7 @@ public class GyhRepaginadoLanguageParser extends Parser {
 			case Var:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(100);
+				setState(102);
 				match(Var);
 				_varExp += _input.LT(-1).getText();
 				}
@@ -647,12 +659,12 @@ public class GyhRepaginadoLanguageParser extends Parser {
 			case AbrePar:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(102);
+				setState(104);
 				match(AbrePar);
 				_varExp += " ( ";
-				setState(104);
+				setState(106);
 				expressaoAritmetica();
-				setState(105);
+				setState(107);
 				match(FechaPar);
 				_varExp += " ) ";
 				}
@@ -673,17 +685,11 @@ public class GyhRepaginadoLanguageParser extends Parser {
 	}
 
 	public static class ExpressaoRelacionalContext extends ParserRuleContext {
-		public List<TermoRelacionalContext> termoRelacional() {
-			return getRuleContexts(TermoRelacionalContext.class);
+		public TermoRelacionalContext termoRelacional() {
+			return getRuleContext(TermoRelacionalContext.class,0);
 		}
-		public TermoRelacionalContext termoRelacional(int i) {
-			return getRuleContext(TermoRelacionalContext.class,i);
-		}
-		public List<OperadorBooleanoContext> operadorBooleano() {
-			return getRuleContexts(OperadorBooleanoContext.class);
-		}
-		public OperadorBooleanoContext operadorBooleano(int i) {
-			return getRuleContext(OperadorBooleanoContext.class,i);
+		public ExpressaoRelacional1Context expressaoRelacional1() {
+			return getRuleContext(ExpressaoRelacional1Context.class,0);
 		}
 		public ExpressaoRelacionalContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -703,30 +709,73 @@ public class GyhRepaginadoLanguageParser extends Parser {
 		ExpressaoRelacionalContext _localctx = new ExpressaoRelacionalContext(_ctx, getState());
 		enterRule(_localctx, 16, RULE_expressaoRelacional);
 		try {
-			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(116);
-			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,8,_ctx);
-			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
-				if ( _alt==1 ) {
-					{
-					{
-					setState(110);
-					termoRelacional();
-					setState(111);
-					operadorBooleano();
-					_varCondicao+=" "+_input.LT(-1).getText()+" ";
-					}
-					} 
-				}
-				setState(118);
-				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,8,_ctx);
-			}
-			setState(119);
+			setState(112);
 			termoRelacional();
+			setState(113);
+			expressaoRelacional1();
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class ExpressaoRelacional1Context extends ParserRuleContext {
+		public OperadorBooleanoContext operadorBooleano() {
+			return getRuleContext(OperadorBooleanoContext.class,0);
+		}
+		public TermoRelacionalContext termoRelacional() {
+			return getRuleContext(TermoRelacionalContext.class,0);
+		}
+		public ExpressaoRelacional1Context expressaoRelacional1() {
+			return getRuleContext(ExpressaoRelacional1Context.class,0);
+		}
+		public ExpressaoRelacional1Context(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_expressaoRelacional1; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof GyhRepaginadoLanguageListener ) ((GyhRepaginadoLanguageListener)listener).enterExpressaoRelacional1(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof GyhRepaginadoLanguageListener ) ((GyhRepaginadoLanguageListener)listener).exitExpressaoRelacional1(this);
+		}
+	}
+
+	public final ExpressaoRelacional1Context expressaoRelacional1() throws RecognitionException {
+		ExpressaoRelacional1Context _localctx = new ExpressaoRelacional1Context(_ctx, getState());
+		enterRule(_localctx, 18, RULE_expressaoRelacional1);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(120);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==OpBoolE || _la==OpBoolOu) {
+				{
+				setState(115);
+				operadorBooleano();
+				_varCondicao+=" ";
+														if(_input.LT(-1).getText().equals("and")){_varCondicao+="&& ";} 
+														else{_varCondicao+="|| ";}
+				setState(117);
+				termoRelacional();
+				setState(118);
+				expressaoRelacional1();
+				}
+			}
+
 			}
 		}
 		catch (RecognitionException re) {
@@ -769,21 +818,21 @@ public class GyhRepaginadoLanguageParser extends Parser {
 
 	public final TermoRelacionalContext termoRelacional() throws RecognitionException {
 		TermoRelacionalContext _localctx = new TermoRelacionalContext(_ctx, getState());
-		enterRule(_localctx, 18, RULE_termoRelacional);
+		enterRule(_localctx, 20, RULE_termoRelacional);
 		try {
-			setState(134);
+			setState(135);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,9,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(121);
+				setState(122);
 				expressaoAritmetica();
 				_varCondicao+=_varExp; _varExp=" ";
-				setState(123);
+				setState(124);
 				match(OpRel);
 				_varCondicao+=" ";_varCondicao+=_input.LT(-1).getText();
-				setState(125);
+				setState(126);
 				expressaoAritmetica();
 				_varCondicao+=_varExp; _varExp=" ";
 				}
@@ -791,12 +840,12 @@ public class GyhRepaginadoLanguageParser extends Parser {
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(128);
+				setState(129);
 				match(AbrePar);
 				_varCondicao+=" ( ";
-				setState(130);
-				expressaoRelacional();
 				setState(131);
+				expressaoRelacional();
+				setState(132);
 				match(FechaPar);
 				_varCondicao+=" ) ";
 				}
@@ -833,12 +882,12 @@ public class GyhRepaginadoLanguageParser extends Parser {
 
 	public final OperadorBooleanoContext operadorBooleano() throws RecognitionException {
 		OperadorBooleanoContext _localctx = new OperadorBooleanoContext(_ctx, getState());
-		enterRule(_localctx, 20, RULE_operadorBooleano);
+		enterRule(_localctx, 22, RULE_operadorBooleano);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(136);
+			setState(137);
 			_la = _input.LA(1);
 			if ( !(_la==OpBoolE || _la==OpBoolOu) ) {
 			_errHandler.recoverInline(this);
@@ -884,23 +933,21 @@ public class GyhRepaginadoLanguageParser extends Parser {
 
 	public final ListaComandosContext listaComandos() throws RecognitionException {
 		ListaComandosContext _localctx = new ListaComandosContext(_ctx, getState());
-		enterRule(_localctx, 22, RULE_listaComandos);
+		enterRule(_localctx, 24, RULE_listaComandos);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
+			_bclComandos = new ArrayList<Comando>();
+							_pilhaComandos.push(_bclComandos);
 			setState(141); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(138);
+				setState(140);
 				comando();
-
-									   listCmd.addAll(listCmdAux);
-									   listCmdAux.removeAll(listCmdAux);
-									 
 				}
 				}
 				setState(143); 
@@ -955,7 +1002,7 @@ public class GyhRepaginadoLanguageParser extends Parser {
 
 	public final ComandoContext comando() throws RecognitionException {
 		ComandoContext _localctx = new ComandoContext(_ctx, getState());
-		enterRule(_localctx, 24, RULE_comando);
+		enterRule(_localctx, 26, RULE_comando);
 		try {
 			setState(151);
 			_errHandler.sync(this);
@@ -1036,7 +1083,7 @@ public class GyhRepaginadoLanguageParser extends Parser {
 
 	public final ComandoEntradaContext comandoEntrada() throws RecognitionException {
 		ComandoEntradaContext _localctx = new ComandoEntradaContext(_ctx, getState());
-		enterRule(_localctx, 26, RULE_comandoEntrada);
+		enterRule(_localctx, 28, RULE_comandoEntrada);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
@@ -1047,7 +1094,7 @@ public class GyhRepaginadoLanguageParser extends Parser {
 			 verificaVar(_input.LT(-1).getText());
 									    ComandoLeitura cmd = new ComandoLeitura();
 									    cmd.setId(_input.LT(-1).getText());
-									    listCmdAux.add(cmd);
+									    _pilhaComandos.peek().add(cmd);
 									   
 			}
 		}
@@ -1082,7 +1129,7 @@ public class GyhRepaginadoLanguageParser extends Parser {
 
 	public final ComandoSaidaContext comandoSaida() throws RecognitionException {
 		ComandoSaidaContext _localctx = new ComandoSaidaContext(_ctx, getState());
-		enterRule(_localctx, 28, RULE_comandoSaida);
+		enterRule(_localctx, 30, RULE_comandoSaida);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
@@ -1098,7 +1145,7 @@ public class GyhRepaginadoLanguageParser extends Parser {
 				 verificaVar(_input.LT(-1).getText());
 										     ComandoEscrita cmd = new ComandoEscrita();
 										     cmd.setId(_input.LT(-1).getText());
-										     listCmdAux.add(cmd);
+										    _pilhaComandos.peek().add(cmd);
 										   
 				}
 				break;
@@ -1153,156 +1200,50 @@ public class GyhRepaginadoLanguageParser extends Parser {
 
 	public final ComandoCondicaoContext comandoCondicao() throws RecognitionException {
 		ComandoCondicaoContext _localctx = new ComandoCondicaoContext(_ctx, getState());
-		enterRule(_localctx, 30, RULE_comandoCondicao);
+		enterRule(_localctx, 32, RULE_comandoCondicao);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(163);
 			match(PCSe);
-			_varExp=""; _varCondicao="";
+			_varExp=""; _varCondicao=""; _varCondicaoif="";
 			setState(165);
 			expressaoRelacional();
 			setState(166);
 			match(PCEntao);
-			setState(167);
+
+								_bclComandos = new ArrayList<Comando>(); 
+								_pilhaComandos.push(_bclComandos);
+								_pilhaCondicao.push(_varCondicao);
+								
+			setState(168);
 			comando();
 
-							  	_listTrue.addAll(listCmdAux);
-							  	listCmdAux.removeAll(listCmdAux);
+							  	_listTrue = _pilhaComandos.pop();
 							  
-			setState(173);
+			setState(175);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,13,_ctx) ) {
 			case 1:
 				{
-				setState(169);
-				match(PCSenao);
 				setState(170);
+				match(PCSenao);
+
+									_bclComandos = new ArrayList<Comando>(); 
+									_pilhaComandos.push(_bclComandos);
+								  
+				setState(172);
 				comando();
 
-								  	_listFalse.addAll(listCmdAux);
-								  	listCmdAux.removeAll(listCmdAux);
+								  	_listFalse = _pilhaComandos.pop();
 								  
 				}
 				break;
 			}
-			ComandoCondicao cmd= new ComandoCondicao(_varCondicao, _listTrue, _listFalse);
-							   listCmdAux.add(cmd); 
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
 
-	public static class SubAlgoritmoContext extends ParserRuleContext {
-		public TerminalNode PCIni() { return getToken(GyhRepaginadoLanguageParser.PCIni, 0); }
-		public TerminalNode PCFim() { return getToken(GyhRepaginadoLanguageParser.PCFim, 0); }
-		public List<ComandoContext> comando() {
-			return getRuleContexts(ComandoContext.class);
-		}
-		public ComandoContext comando(int i) {
-			return getRuleContext(ComandoContext.class,i);
-		}
-		public SubAlgoritmoContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_subAlgoritmo; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof GyhRepaginadoLanguageListener ) ((GyhRepaginadoLanguageListener)listener).enterSubAlgoritmo(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof GyhRepaginadoLanguageListener ) ((GyhRepaginadoLanguageListener)listener).exitSubAlgoritmo(this);
-		}
-	}
-
-	public final SubAlgoritmoContext subAlgoritmo() throws RecognitionException {
-		SubAlgoritmoContext _localctx = new SubAlgoritmoContext(_ctx, getState());
-		enterRule(_localctx, 32, RULE_subAlgoritmo);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(177);
-			match(PCIni);
-			setState(179); 
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			do {
-				{
-				{
-				setState(178);
-				comando();
-				}
-				}
-				setState(181); 
-				_errHandler.sync(this);
-				_la = _input.LA(1);
-			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PCLer) | (1L << PCImprimir) | (1L << PCSe) | (1L << PCEnqto) | (1L << PCIni) | (1L << Var))) != 0) );
-			setState(183);
-			match(PCFim);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public static class ComandoAtribuicaoContext extends ParserRuleContext {
-		public TerminalNode Var() { return getToken(GyhRepaginadoLanguageParser.Var, 0); }
-		public TerminalNode Atrib() { return getToken(GyhRepaginadoLanguageParser.Atrib, 0); }
-		public ExpressaoAritmeticaContext expressaoAritmetica() {
-			return getRuleContext(ExpressaoAritmeticaContext.class,0);
-		}
-		public ComandoAtribuicaoContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_comandoAtribuicao; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof GyhRepaginadoLanguageListener ) ((GyhRepaginadoLanguageListener)listener).enterComandoAtribuicao(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof GyhRepaginadoLanguageListener ) ((GyhRepaginadoLanguageListener)listener).exitComandoAtribuicao(this);
-		}
-	}
-
-	public final ComandoAtribuicaoContext comandoAtribuicao() throws RecognitionException {
-		ComandoAtribuicaoContext _localctx = new ComandoAtribuicaoContext(_ctx, getState());
-		enterRule(_localctx, 34, RULE_comandoAtribuicao);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(185);
-			match(Var);
-
-								  verificaVar(_input.LT(-1).getText());
-								  _varId=_input.LT(-1).getText();
-								  _varExp="";
-								
-			setState(187);
-			match(Atrib);
-			setState(188);
-			expressaoAritmetica();
-
-								   ComandoAtribuicao cmd=new ComandoAtribuicao(_varId, _varExp);
-								   listCmdAux.add(cmd); 	
-								
+								_varCondicaoif= _pilhaCondicao.pop();
+								ComandoCondicao cmd= new ComandoCondicao(_varCondicaoif, _listTrue, _listFalse);
+							   _pilhaComandos.peek().add(cmd); 
 			}
 		}
 		catch (RecognitionException re) {
@@ -1341,24 +1282,144 @@ public class GyhRepaginadoLanguageParser extends Parser {
 
 	public final ComandoRepeticaoContext comandoRepeticao() throws RecognitionException {
 		ComandoRepeticaoContext _localctx = new ComandoRepeticaoContext(_ctx, getState());
-		enterRule(_localctx, 36, RULE_comandoRepeticao);
+		enterRule(_localctx, 34, RULE_comandoRepeticao);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(191);
+			setState(179);
 			match(PCEnqto);
-			_varExp=""; _varCondicao="";
-			setState(193);
+			_varExp=""; _varCondicaowhile=""; _varCondicao="";
+			setState(181);
 			expressaoRelacional();
-			setState(194);
+			setState(182);
 			match(PCEntao);
-			setState(195);
+
+									_bclComandos = new ArrayList<Comando>();
+									_pilhaComandos.push(_bclComandos);
+									_pilhaCondicao.push(_varCondicao);
+								
+			setState(184);
 			comando();
 
-								_listTrue.addAll(listCmdAux);
-								listCmdAux.removeAll(listCmdAux);
-								ComandoRepeticao cmd = new ComandoRepeticao(_varCondicao, _listTrue);
-								listCmdAux.add(cmd);
+			                    listCmdAux = _pilhaComandos.pop();
+								_varCondicaowhile = _pilhaCondicao.pop(); 
+			                    ComandoRepeticao cmd = new ComandoRepeticao(_varCondicaowhile, listCmdAux);
+			                    _pilhaComandos.peek().add(cmd);
+			                    
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class SubAlgoritmoContext extends ParserRuleContext {
+		public TerminalNode PCIni() { return getToken(GyhRepaginadoLanguageParser.PCIni, 0); }
+		public TerminalNode PCFim() { return getToken(GyhRepaginadoLanguageParser.PCFim, 0); }
+		public List<ComandoContext> comando() {
+			return getRuleContexts(ComandoContext.class);
+		}
+		public ComandoContext comando(int i) {
+			return getRuleContext(ComandoContext.class,i);
+		}
+		public SubAlgoritmoContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_subAlgoritmo; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof GyhRepaginadoLanguageListener ) ((GyhRepaginadoLanguageListener)listener).enterSubAlgoritmo(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof GyhRepaginadoLanguageListener ) ((GyhRepaginadoLanguageListener)listener).exitSubAlgoritmo(this);
+		}
+	}
+
+	public final SubAlgoritmoContext subAlgoritmo() throws RecognitionException {
+		SubAlgoritmoContext _localctx = new SubAlgoritmoContext(_ctx, getState());
+		enterRule(_localctx, 36, RULE_subAlgoritmo);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(187);
+			match(PCIni);
+			setState(189); 
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			do {
+				{
+				{
+				setState(188);
+				comando();
+				}
+				}
+				setState(191); 
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PCLer) | (1L << PCImprimir) | (1L << PCSe) | (1L << PCEnqto) | (1L << PCIni) | (1L << Var))) != 0) );
+			setState(193);
+			match(PCFim);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class ComandoAtribuicaoContext extends ParserRuleContext {
+		public TerminalNode Var() { return getToken(GyhRepaginadoLanguageParser.Var, 0); }
+		public TerminalNode Atrib() { return getToken(GyhRepaginadoLanguageParser.Atrib, 0); }
+		public ExpressaoAritmeticaContext expressaoAritmetica() {
+			return getRuleContext(ExpressaoAritmeticaContext.class,0);
+		}
+		public ComandoAtribuicaoContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_comandoAtribuicao; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof GyhRepaginadoLanguageListener ) ((GyhRepaginadoLanguageListener)listener).enterComandoAtribuicao(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof GyhRepaginadoLanguageListener ) ((GyhRepaginadoLanguageListener)listener).exitComandoAtribuicao(this);
+		}
+	}
+
+	public final ComandoAtribuicaoContext comandoAtribuicao() throws RecognitionException {
+		ComandoAtribuicaoContext _localctx = new ComandoAtribuicaoContext(_ctx, getState());
+		enterRule(_localctx, 38, RULE_comandoAtribuicao);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(195);
+			match(Var);
+
+								  verificaVar(_input.LT(-1).getText());
+								  _varId=_input.LT(-1).getText();
+								  _varExp="";
+								
+			setState(197);
+			match(Atrib);
+			setState(198);
+			expressaoAritmetica();
+
+								   ComandoAtribuicao cmd=new ComandoAtribuicao(_varId, _varExp);
+								   _pilhaComandos.peek().add(cmd); 	
 								
 			}
 		}
@@ -1374,65 +1435,66 @@ public class GyhRepaginadoLanguageParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3!\u00c9\4\2\t\2\4"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3!\u00cc\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
-		"\4\23\t\23\4\24\t\24\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\3\3\3\5"+
-		"\3\65\n\3\3\4\3\4\3\4\3\4\3\4\3\4\3\5\3\5\3\5\3\6\3\6\3\6\3\6\3\6\5\6"+
-		"E\n\6\3\6\3\6\3\6\3\6\3\6\5\6L\n\6\5\6N\n\6\3\7\3\7\3\7\3\b\3\b\3\b\3"+
-		"\b\3\b\5\bX\n\b\3\b\3\b\3\b\3\b\3\b\5\b_\n\b\5\ba\n\b\3\t\3\t\3\t\3\t"+
-		"\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\5\to\n\t\3\n\3\n\3\n\3\n\7\nu\n\n\f\n"+
-		"\16\nx\13\n\3\n\3\n\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13"+
-		"\3\13\3\13\3\13\5\13\u0089\n\13\3\f\3\f\3\r\3\r\3\r\6\r\u0090\n\r\r\r"+
-		"\16\r\u0091\3\16\3\16\3\16\3\16\3\16\3\16\5\16\u009a\n\16\3\17\3\17\3"+
-		"\17\3\17\3\20\3\20\3\20\3\20\5\20\u00a4\n\20\3\21\3\21\3\21\3\21\3\21"+
-		"\3\21\3\21\3\21\3\21\3\21\5\21\u00b0\n\21\3\21\3\21\3\22\3\22\6\22\u00b6"+
-		"\n\22\r\22\16\22\u00b7\3\22\3\22\3\23\3\23\3\23\3\23\3\23\3\23\3\24\3"+
-		"\24\3\24\3\24\3\24\3\24\3\24\3\24\2\2\25\2\4\6\b\n\f\16\20\22\24\26\30"+
-		"\32\34\36 \"$&\2\4\3\2\22\23\3\2\r\16\2\u00ca\2(\3\2\2\2\4\62\3\2\2\2"+
-		"\6\66\3\2\2\2\b<\3\2\2\2\nM\3\2\2\2\fO\3\2\2\2\16`\3\2\2\2\20n\3\2\2\2"+
-		"\22v\3\2\2\2\24\u0088\3\2\2\2\26\u008a\3\2\2\2\30\u008f\3\2\2\2\32\u0099"+
-		"\3\2\2\2\34\u009b\3\2\2\2\36\u009f\3\2\2\2 \u00a5\3\2\2\2\"\u00b3\3\2"+
-		"\2\2$\u00bb\3\2\2\2&\u00c1\3\2\2\2()\7\b\2\2)*\7\21\2\2*+\7\7\2\2+,\5"+
-		"\4\3\2,-\7\b\2\2-.\7\20\2\2./\7\7\2\2/\60\5\30\r\2\60\61\b\2\1\2\61\3"+
-		"\3\2\2\2\62\64\5\6\4\2\63\65\5\4\3\2\64\63\3\2\2\2\64\65\3\2\2\2\65\5"+
-		"\3\2\2\2\66\67\7\34\2\2\678\7\b\2\289\t\2\2\29:\7\7\2\2:;\b\4\1\2;\7\3"+
-		"\2\2\2<=\5\f\7\2=>\5\n\6\2>\t\3\2\2\2?@\7\3\2\2@A\b\6\1\2AB\5\f\7\2BC"+
-		"\5\n\6\2CE\3\2\2\2D?\3\2\2\2DE\3\2\2\2EN\3\2\2\2FG\7\4\2\2GH\b\6\1\2H"+
-		"I\5\f\7\2IJ\5\n\6\2JL\3\2\2\2KF\3\2\2\2KL\3\2\2\2LN\3\2\2\2MD\3\2\2\2"+
-		"MK\3\2\2\2N\13\3\2\2\2OP\5\20\t\2PQ\5\16\b\2Q\r\3\2\2\2RS\7\5\2\2ST\b"+
-		"\b\1\2TU\5\20\t\2UV\5\16\b\2VX\3\2\2\2WR\3\2\2\2WX\3\2\2\2Xa\3\2\2\2Y"+
-		"Z\7\6\2\2Z[\b\b\1\2[\\\5\20\t\2\\]\5\16\b\2]_\3\2\2\2^Y\3\2\2\2^_\3\2"+
-		"\2\2_a\3\2\2\2`W\3\2\2\2`^\3\2\2\2a\17\3\2\2\2bc\7\36\2\2co\b\t\1\2de"+
-		"\7\37\2\2eo\b\t\1\2fg\7\34\2\2go\b\t\1\2hi\7\13\2\2ij\b\t\1\2jk\5\b\5"+
-		"\2kl\7\f\2\2lm\b\t\1\2mo\3\2\2\2nb\3\2\2\2nd\3\2\2\2nf\3\2\2\2nh\3\2\2"+
-		"\2o\21\3\2\2\2pq\5\24\13\2qr\5\26\f\2rs\b\n\1\2su\3\2\2\2tp\3\2\2\2ux"+
-		"\3\2\2\2vt\3\2\2\2vw\3\2\2\2wy\3\2\2\2xv\3\2\2\2yz\5\24\13\2z\23\3\2\2"+
-		"\2{|\5\b\5\2|}\b\13\1\2}~\7\n\2\2~\177\b\13\1\2\177\u0080\5\b\5\2\u0080"+
-		"\u0081\b\13\1\2\u0081\u0089\3\2\2\2\u0082\u0083\7\13\2\2\u0083\u0084\b"+
-		"\13\1\2\u0084\u0085\5\22\n\2\u0085\u0086\7\f\2\2\u0086\u0087\b\13\1\2"+
-		"\u0087\u0089\3\2\2\2\u0088{\3\2\2\2\u0088\u0082\3\2\2\2\u0089\25\3\2\2"+
-		"\2\u008a\u008b\t\3\2\2\u008b\27\3\2\2\2\u008c\u008d\5\32\16\2\u008d\u008e"+
-		"\b\r\1\2\u008e\u0090\3\2\2\2\u008f\u008c\3\2\2\2\u0090\u0091\3\2\2\2\u0091"+
-		"\u008f\3\2\2\2\u0091\u0092\3\2\2\2\u0092\31\3\2\2\2\u0093\u009a\5\34\17"+
-		"\2\u0094\u009a\5\36\20\2\u0095\u009a\5 \21\2\u0096\u009a\5$\23\2\u0097"+
-		"\u009a\5\"\22\2\u0098\u009a\5&\24\2\u0099\u0093\3\2\2\2\u0099\u0094\3"+
-		"\2\2\2\u0099\u0095\3\2\2\2\u0099\u0096\3\2\2\2\u0099\u0097\3\2\2\2\u0099"+
-		"\u0098\3\2\2\2\u009a\33\3\2\2\2\u009b\u009c\7\24\2\2\u009c\u009d\7\34"+
-		"\2\2\u009d\u009e\b\17\1\2\u009e\35\3\2\2\2\u009f\u00a3\7\25\2\2\u00a0"+
-		"\u00a1\7\34\2\2\u00a1\u00a4\b\20\1\2\u00a2\u00a4\7\35\2\2\u00a3\u00a0"+
-		"\3\2\2\2\u00a3\u00a2\3\2\2\2\u00a4\37\3\2\2\2\u00a5\u00a6\7\26\2\2\u00a6"+
-		"\u00a7\b\21\1\2\u00a7\u00a8\5\22\n\2\u00a8\u00a9\7\30\2\2\u00a9\u00aa"+
-		"\5\32\16\2\u00aa\u00af\b\21\1\2\u00ab\u00ac\7\27\2\2\u00ac\u00ad\5\32"+
-		"\16\2\u00ad\u00ae\b\21\1\2\u00ae\u00b0\3\2\2\2\u00af\u00ab\3\2\2\2\u00af"+
-		"\u00b0\3\2\2\2\u00b0\u00b1\3\2\2\2\u00b1\u00b2\b\21\1\2\u00b2!\3\2\2\2"+
-		"\u00b3\u00b5\7\32\2\2\u00b4\u00b6\5\32\16\2\u00b5\u00b4\3\2\2\2\u00b6"+
-		"\u00b7\3\2\2\2\u00b7\u00b5\3\2\2\2\u00b7\u00b8\3\2\2\2\u00b8\u00b9\3\2"+
-		"\2\2\u00b9\u00ba\7\33\2\2\u00ba#\3\2\2\2\u00bb\u00bc\7\34\2\2\u00bc\u00bd"+
-		"\b\23\1\2\u00bd\u00be\7\t\2\2\u00be\u00bf\5\b\5\2\u00bf\u00c0\b\23\1\2"+
-		"\u00c0%\3\2\2\2\u00c1\u00c2\7\31\2\2\u00c2\u00c3\b\24\1\2\u00c3\u00c4"+
-		"\5\22\n\2\u00c4\u00c5\7\30\2\2\u00c5\u00c6\5\32\16\2\u00c6\u00c7\b\24"+
-		"\1\2\u00c7\'\3\2\2\2\21\64DKMW^`nv\u0088\u0091\u0099\u00a3\u00af\u00b7";
+		"\4\23\t\23\4\24\t\24\4\25\t\25\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2"+
+		"\3\3\3\3\5\3\67\n\3\3\4\3\4\3\4\3\4\3\4\3\4\3\5\3\5\3\5\3\6\3\6\3\6\3"+
+		"\6\3\6\5\6G\n\6\3\6\3\6\3\6\3\6\3\6\5\6N\n\6\5\6P\n\6\3\7\3\7\3\7\3\b"+
+		"\3\b\3\b\3\b\3\b\5\bZ\n\b\3\b\3\b\3\b\3\b\3\b\5\ba\n\b\5\bc\n\b\3\t\3"+
+		"\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\5\tq\n\t\3\n\3\n\3\n\3\13\3"+
+		"\13\3\13\3\13\3\13\5\13{\n\13\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f"+
+		"\3\f\3\f\3\f\5\f\u008a\n\f\3\r\3\r\3\16\3\16\6\16\u0090\n\16\r\16\16\16"+
+		"\u0091\3\17\3\17\3\17\3\17\3\17\3\17\5\17\u009a\n\17\3\20\3\20\3\20\3"+
+		"\20\3\21\3\21\3\21\3\21\5\21\u00a4\n\21\3\22\3\22\3\22\3\22\3\22\3\22"+
+		"\3\22\3\22\3\22\3\22\3\22\3\22\5\22\u00b2\n\22\3\22\3\22\3\23\3\23\3\23"+
+		"\3\23\3\23\3\23\3\23\3\23\3\24\3\24\6\24\u00c0\n\24\r\24\16\24\u00c1\3"+
+		"\24\3\24\3\25\3\25\3\25\3\25\3\25\3\25\3\25\2\2\26\2\4\6\b\n\f\16\20\22"+
+		"\24\26\30\32\34\36 \"$&(\2\4\3\2\22\23\3\2\r\16\2\u00cc\2*\3\2\2\2\4\64"+
+		"\3\2\2\2\68\3\2\2\2\b>\3\2\2\2\nO\3\2\2\2\fQ\3\2\2\2\16b\3\2\2\2\20p\3"+
+		"\2\2\2\22r\3\2\2\2\24z\3\2\2\2\26\u0089\3\2\2\2\30\u008b\3\2\2\2\32\u008d"+
+		"\3\2\2\2\34\u0099\3\2\2\2\36\u009b\3\2\2\2 \u009f\3\2\2\2\"\u00a5\3\2"+
+		"\2\2$\u00b5\3\2\2\2&\u00bd\3\2\2\2(\u00c5\3\2\2\2*+\7\b\2\2+,\7\21\2\2"+
+		",-\7\7\2\2-.\5\4\3\2./\7\b\2\2/\60\7\20\2\2\60\61\7\7\2\2\61\62\5\32\16"+
+		"\2\62\63\b\2\1\2\63\3\3\2\2\2\64\66\5\6\4\2\65\67\5\4\3\2\66\65\3\2\2"+
+		"\2\66\67\3\2\2\2\67\5\3\2\2\289\7\34\2\29:\7\b\2\2:;\t\2\2\2;<\7\7\2\2"+
+		"<=\b\4\1\2=\7\3\2\2\2>?\5\f\7\2?@\5\n\6\2@\t\3\2\2\2AB\7\3\2\2BC\b\6\1"+
+		"\2CD\5\f\7\2DE\5\n\6\2EG\3\2\2\2FA\3\2\2\2FG\3\2\2\2GP\3\2\2\2HI\7\4\2"+
+		"\2IJ\b\6\1\2JK\5\f\7\2KL\5\n\6\2LN\3\2\2\2MH\3\2\2\2MN\3\2\2\2NP\3\2\2"+
+		"\2OF\3\2\2\2OM\3\2\2\2P\13\3\2\2\2QR\5\20\t\2RS\5\16\b\2S\r\3\2\2\2TU"+
+		"\7\5\2\2UV\b\b\1\2VW\5\20\t\2WX\5\16\b\2XZ\3\2\2\2YT\3\2\2\2YZ\3\2\2\2"+
+		"Zc\3\2\2\2[\\\7\6\2\2\\]\b\b\1\2]^\5\20\t\2^_\5\16\b\2_a\3\2\2\2`[\3\2"+
+		"\2\2`a\3\2\2\2ac\3\2\2\2bY\3\2\2\2b`\3\2\2\2c\17\3\2\2\2de\7\36\2\2eq"+
+		"\b\t\1\2fg\7\37\2\2gq\b\t\1\2hi\7\34\2\2iq\b\t\1\2jk\7\13\2\2kl\b\t\1"+
+		"\2lm\5\b\5\2mn\7\f\2\2no\b\t\1\2oq\3\2\2\2pd\3\2\2\2pf\3\2\2\2ph\3\2\2"+
+		"\2pj\3\2\2\2q\21\3\2\2\2rs\5\26\f\2st\5\24\13\2t\23\3\2\2\2uv\5\30\r\2"+
+		"vw\b\13\1\2wx\5\26\f\2xy\5\24\13\2y{\3\2\2\2zu\3\2\2\2z{\3\2\2\2{\25\3"+
+		"\2\2\2|}\5\b\5\2}~\b\f\1\2~\177\7\n\2\2\177\u0080\b\f\1\2\u0080\u0081"+
+		"\5\b\5\2\u0081\u0082\b\f\1\2\u0082\u008a\3\2\2\2\u0083\u0084\7\13\2\2"+
+		"\u0084\u0085\b\f\1\2\u0085\u0086\5\22\n\2\u0086\u0087\7\f\2\2\u0087\u0088"+
+		"\b\f\1\2\u0088\u008a\3\2\2\2\u0089|\3\2\2\2\u0089\u0083\3\2\2\2\u008a"+
+		"\27\3\2\2\2\u008b\u008c\t\3\2\2\u008c\31\3\2\2\2\u008d\u008f\b\16\1\2"+
+		"\u008e\u0090\5\34\17\2\u008f\u008e\3\2\2\2\u0090\u0091\3\2\2\2\u0091\u008f"+
+		"\3\2\2\2\u0091\u0092\3\2\2\2\u0092\33\3\2\2\2\u0093\u009a\5\36\20\2\u0094"+
+		"\u009a\5 \21\2\u0095\u009a\5\"\22\2\u0096\u009a\5(\25\2\u0097\u009a\5"+
+		"&\24\2\u0098\u009a\5$\23\2\u0099\u0093\3\2\2\2\u0099\u0094\3\2\2\2\u0099"+
+		"\u0095\3\2\2\2\u0099\u0096\3\2\2\2\u0099\u0097\3\2\2\2\u0099\u0098\3\2"+
+		"\2\2\u009a\35\3\2\2\2\u009b\u009c\7\24\2\2\u009c\u009d\7\34\2\2\u009d"+
+		"\u009e\b\20\1\2\u009e\37\3\2\2\2\u009f\u00a3\7\25\2\2\u00a0\u00a1\7\34"+
+		"\2\2\u00a1\u00a4\b\21\1\2\u00a2\u00a4\7\35\2\2\u00a3\u00a0\3\2\2\2\u00a3"+
+		"\u00a2\3\2\2\2\u00a4!\3\2\2\2\u00a5\u00a6\7\26\2\2\u00a6\u00a7\b\22\1"+
+		"\2\u00a7\u00a8\5\22\n\2\u00a8\u00a9\7\30\2\2\u00a9\u00aa\b\22\1\2\u00aa"+
+		"\u00ab\5\34\17\2\u00ab\u00b1\b\22\1\2\u00ac\u00ad\7\27\2\2\u00ad\u00ae"+
+		"\b\22\1\2\u00ae\u00af\5\34\17\2\u00af\u00b0\b\22\1\2\u00b0\u00b2\3\2\2"+
+		"\2\u00b1\u00ac\3\2\2\2\u00b1\u00b2\3\2\2\2\u00b2\u00b3\3\2\2\2\u00b3\u00b4"+
+		"\b\22\1\2\u00b4#\3\2\2\2\u00b5\u00b6\7\31\2\2\u00b6\u00b7\b\23\1\2\u00b7"+
+		"\u00b8\5\22\n\2\u00b8\u00b9\7\30\2\2\u00b9\u00ba\b\23\1\2\u00ba\u00bb"+
+		"\5\34\17\2\u00bb\u00bc\b\23\1\2\u00bc%\3\2\2\2\u00bd\u00bf\7\32\2\2\u00be"+
+		"\u00c0\5\34\17\2\u00bf\u00be\3\2\2\2\u00c0\u00c1\3\2\2\2\u00c1\u00bf\3"+
+		"\2\2\2\u00c1\u00c2\3\2\2\2\u00c2\u00c3\3\2\2\2\u00c3\u00c4\7\33\2\2\u00c4"+
+		"\'\3\2\2\2\u00c5\u00c6\7\34\2\2\u00c6\u00c7\b\25\1\2\u00c7\u00c8\7\t\2"+
+		"\2\u00c8\u00c9\5\b\5\2\u00c9\u00ca\b\25\1\2\u00ca)\3\2\2\2\21\66FMOY`"+
+		"bpz\u0089\u0091\u0099\u00a3\u00b1\u00c1";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

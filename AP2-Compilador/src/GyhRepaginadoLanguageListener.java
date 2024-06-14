@@ -100,6 +100,16 @@ public interface GyhRepaginadoLanguageListener extends ParseTreeListener {
 	 */
 	void exitExpressaoRelacional(GyhRepaginadoLanguageParser.ExpressaoRelacionalContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link GyhRepaginadoLanguageParser#expressaoRelacional1}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpressaoRelacional1(GyhRepaginadoLanguageParser.ExpressaoRelacional1Context ctx);
+	/**
+	 * Exit a parse tree produced by {@link GyhRepaginadoLanguageParser#expressaoRelacional1}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpressaoRelacional1(GyhRepaginadoLanguageParser.ExpressaoRelacional1Context ctx);
+	/**
 	 * Enter a parse tree produced by {@link GyhRepaginadoLanguageParser#termoRelacional}.
 	 * @param ctx the parse tree
 	 */
@@ -170,6 +180,16 @@ public interface GyhRepaginadoLanguageListener extends ParseTreeListener {
 	 */
 	void exitComandoCondicao(GyhRepaginadoLanguageParser.ComandoCondicaoContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link GyhRepaginadoLanguageParser#comandoRepeticao}.
+	 * @param ctx the parse tree
+	 */
+	void enterComandoRepeticao(GyhRepaginadoLanguageParser.ComandoRepeticaoContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GyhRepaginadoLanguageParser#comandoRepeticao}.
+	 * @param ctx the parse tree
+	 */
+	void exitComandoRepeticao(GyhRepaginadoLanguageParser.ComandoRepeticaoContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link GyhRepaginadoLanguageParser#subAlgoritmo}.
 	 * @param ctx the parse tree
 	 */
@@ -189,14 +209,4 @@ public interface GyhRepaginadoLanguageListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitComandoAtribuicao(GyhRepaginadoLanguageParser.ComandoAtribuicaoContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link GyhRepaginadoLanguageParser#comandoRepeticao}.
-	 * @param ctx the parse tree
-	 */
-	void enterComandoRepeticao(GyhRepaginadoLanguageParser.ComandoRepeticaoContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link GyhRepaginadoLanguageParser#comandoRepeticao}.
-	 * @param ctx the parse tree
-	 */
-	void exitComandoRepeticao(GyhRepaginadoLanguageParser.ComandoRepeticaoContext ctx);
 }
