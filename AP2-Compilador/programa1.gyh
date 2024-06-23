@@ -1,18 +1,13 @@
 [dec]
 Parametro [integer]
 Fatorial[integer]
+Teste[float]
 
 [prog]
 # Calcula o fatorial de um número inteiro
-if Parametro == 0 or Fatorial == 5 then 
-	start
-	Fatorial << 1
-	if Parametro > 1 then
-		start
-		while Fatorial < 33 then
-		start
-		read Parametro
-		end
-		Parametro <<  66
-	end 
-	end
+Parametro << 2
+    while Fatorial < 10 then
+    start
+        Fatorial << Fatorial + 1
+        Fatorial << Fatorial - 1
+    end

@@ -24,10 +24,13 @@ grammar GyhRepaginadoLanguage;
 	private ArrayList<Comando> listCmdAux1 = new ArrayList<Comando>();
 
 	private Stack<ArrayList<Comando>>  _pilhaComandos = new Stack<ArrayList<Comando>>();
+	private Stack<ArrayList<Comando>>  _pilhaComandosAux = new Stack<ArrayList<Comando>>();
 	private ArrayList<Comando> _bclComandos;
 
-	private ArrayList<Comando> _listTrue = new ArrayList<Comando>();
-	private ArrayList<Comando> _listFalse = new ArrayList<Comando>();
+	private Stack<ArrayList<Comando>> _listTrue = new Stack<ArrayList<Comando>>();
+	private ArrayList<Comando> _True = new ArrayList<Comando>();
+	private Stack<ArrayList<Comando>> _listFalse = new Stack<ArrayList<Comando>>();
+	private ArrayList<Comando> _False = new ArrayList<Comando>();
 
 	//======
 	private String _varId;
@@ -46,9 +49,21 @@ grammar GyhRepaginadoLanguage;
 		System.out.println("\n Erro semantico, variavel nao declarada "+nome);
 		} 
 	}
-	public void printComandos(ArrayList<Comando> comandos) {
-		for (Comando comando : comandos) {
-			System.out.println(comando.toString());
+    public static void imprimirPilha(Stack<ArrayList<Comando>> pilha) {
+        System.out.println("Elementos da pilha:");
+        for (ArrayList<Comando> elemento : pilha) {
+            System.out.println(elemento);
+        }
+    }
+
+
+	private String verificaTipoExp(String exp) {
+		if (exp.matches("\\d+")) {
+			return "integer";
+		} else if (exp.matches("\\d+\\.\\d+")) {
+			return "float";
+		} else {
+			return "indefinido"; 
 		}
 	}
 }
@@ -75,8 +90,7 @@ declaracao: Var IniDelim (PCInt | PCReal) FimDelim
 			  else{
 			  	System.out.println("Erro semantico >> redeclaracao de variavel: "+_nomeVar);
 			  }	  
-			};//declaracao de variÃ¡veis
-variÃ¡veis
+			};//declaracao de var
 expressaoAritmetica: termoAritmetico expressaoAritmeticalinha;
 
 expressaoAritmeticalinha: 
@@ -86,18 +100,15 @@ expressaoAritmeticalinha:
 termoAritmetico: fatorAritmetico termoAritmeticolinha;
 
 termoAritmeticolinha:
-				('*' {_varExp += " * ";} fatorAritmetico  termoAritmeticolinha)?
-				|('/'{_varExp += " / ";} fatorAritmetico  termoAritmeticolinha)? ; 
+				('*' {_varExp += " * ";} fatorAritmetico termoAritmeticolinha)?
+				|('/'{_varExp += " / ";} fatorAritmetico termoAritmeticolinha)? ; 
 
 fatorAritmetico:  NumInt  {_varExp += _input.LT(-1).getText();}
 				| NumReal {_varExp += _input.LT(-1).getText();}
 				| Var     {_varExp += _input.LT(-1).getText();}
 				| AbrePar {_varExp += " ( ";}
 				   expressaoAritmetica 
-				  FechaPar {_varExp += " ) ";}; //aparentemente ok!!! 
-
-
-//Colocar ExpressaoRelacional, TermoRelacional, OperadorBooleano
+				  FechaPar {_varExp += " ) ";}; 
 
 expressaoRelacional: termoRelacional expressaoRelacional1;
 
@@ -113,17 +124,12 @@ termoRelacional: expressaoAritmetica    {_varCondicao+=_varExp; _varExp=" ";}
 				 expressaoRelacional 
 				 FechaPar               {_varCondicao+=" ) ";};
 
-
 operadorBooleano: 'or'| 'and';
 
 listaComandos: {_bclComandos = new ArrayList<Comando>();
 				_pilhaComandos.push(_bclComandos);} (comando )+;
 
-comando: comandoEntrada | comandoSaida | comandoCondicao  |comandoAtribuicao| subAlgoritmo|comandoRepeticao ; //arrumar isso aqui!!!! (BOTAR O REPTICAO)
-
-
-//Colocar ComandoEntrada | ComandoSaida | ComandoCondicao | ComandoRepeticao | SubAlgoritmo
-
+comando: comandoEntrada | comandoSaida | comandoCondicao | comandoAtribuicao | subAlgoritmo | comandoRepeticao ; 
 
 comandoEntrada: PCLer Var
 						 { verificaVar(_input.LT(-1).getText());
@@ -145,7 +151,6 @@ comandoSaida: PCImprimir  (Var
 								_pilhaComandos.peek().add(cmd);
 							});
 
-
 comandoCondicao:  PCSe {_varExp=""; _varCondicao=""; _varCondicaoif="";}
 				  expressaoRelacional PCEntao {
 					_bclComandos = new ArrayList<Comando>(); 
@@ -153,7 +158,9 @@ comandoCondicao:  PCSe {_varExp=""; _varCondicao=""; _varCondicaoif="";}
 					_pilhaCondicao.push(_varCondicao);
 					}comando
 				  {
-				  	_listTrue = _pilhaComandos.pop();
+					imprimirPilha(_pilhaComandos);
+					_True = _pilhaComandos.pop();
+				  	_listTrue.push(_True);
 				  } 
 				  (PCSenao
 				  {
@@ -162,14 +169,21 @@ comandoCondicao:  PCSe {_varExp=""; _varCondicao=""; _varCondicaoif="";}
 				  }
 				   comando
 				  {
-				  	_listFalse = _pilhaComandos.pop();
+					imprimirPilha(_pilhaComandos);
+					_False = _pilhaComandos.pop();
+				  	_listFalse.push(_False);
 				  }
 				  )?
 				  {
+					_True = _listTrue.pop();
+
+					if (!_listFalse.isEmpty()) {
+						_False = _listFalse.pop(); 
+					}
+
 					_varCondicaoif= _pilhaCondicao.pop();
-					ComandoCondicao cmd= new ComandoCondicao(_varCondicaoif, _listTrue, _listFalse);
-				   _pilhaComandos.peek().add(cmd); };
-				  
+					ComandoCondicao cmd= new ComandoCondicao(_varCondicaoif, _True, _False);
+				   _pilhaComandos.peek().add(cmd); };				
 
 comandoRepeticao: PCEnqto {_varExp=""; _varCondicaowhile=""; _varCondicao="";}
                     expressaoRelacional PCEntao 
@@ -180,16 +194,13 @@ comandoRepeticao: PCEnqto {_varExp=""; _varCondicaowhile=""; _varCondicao="";}
 					}
 					comando
                     {
-                    listCmdAux = _pilhaComandos.pop();
-					_varCondicaowhile = _pilhaCondicao.pop(); 
-                    ComandoRepeticao cmd = new ComandoRepeticao(_varCondicaowhile, listCmdAux);
-                    _pilhaComandos.peek().add(cmd);
+						listCmdAux = _pilhaComandos.pop();
+						_varCondicaowhile = _pilhaCondicao.pop(); 
+						ComandoRepeticao cmd = new ComandoRepeticao(_varCondicaowhile, listCmdAux);
+						_pilhaComandos.peek().add(cmd);
                     };
 
-
-subAlgoritmo: PCIni
-			 (comando)+ PCFim;
-
+subAlgoritmo: PCIni (comando)+ PCFim;
 
 comandoAtribuicao:  Var 
 					{
@@ -199,15 +210,23 @@ comandoAtribuicao:  Var
 					}  
 					Atrib expressaoAritmetica
 					{
-					   ComandoAtribuicao cmd=new ComandoAtribuicao(_varId, _varExp);
-					   _pilhaComandos.peek().add(cmd); 	
+					   verificaVar(_varId);
+						Simbolo simbolo = _tabelaSimbolo.getTabela().get(_varId);
+						if (simbolo != null) {
+							String tipoVar = simbolo.getTipo();
+							String tipoExp = verificaTipoExp(_varExp);
+
+							if (tipoVar.equals("integer") && tipoExp.equals("float")) {
+								System.out.println("Erro semântico >> atribuição de float para inteiro na variável: " + _varId);
+							} else if (tipoVar.equals("float") && tipoExp.equals("integer")) {
+								System.out.println("Erro semântico >> atribuição de integer para float na variável: " + _varId);
+							}
+							ComandoAtribuicao cmd = new ComandoAtribuicao(_varId, _varExp);
+							_pilhaComandos.peek().add(cmd);
+						}
 					};
 
-
-
-
 //==========
-
 
 FimDelim: ']';
 IniDelim: '[';
@@ -230,7 +249,6 @@ PCEntao: 'then';
 PCEnqto: 'while';
 PCIni: 'start';
 PCFim: 'end';
-
 
 Var: [A-Z] ( [0-9] | [a-z] | [A-Z] )*;
 

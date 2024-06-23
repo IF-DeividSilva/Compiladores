@@ -7,20 +7,13 @@
  int main(void){
 	int Parametro; 
 	int Fatorial; 
+	float Teste; 
 
-	 if( Parametro == 0 ||  Fatorial == 5 ){
+	Parametro = 2;
+	 while( Fatorial < 10 ){
 
-	Fatorial = 1;
-	 if( Parametro > 1 ){
-
-	 while( Fatorial < 33 ){
-
-	scanf("%d", &Parametro);
-	 }
-
-	Parametro = 66;
-	 }
-
+	Fatorial = Fatorial + 1;
+	Fatorial = Fatorial - 1;
 	 }
 
  	return 0;

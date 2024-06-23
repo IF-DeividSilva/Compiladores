@@ -145,7 +145,7 @@ public class GyhRepaginadoLanguageParser extends Parser {
 		}
 		public void verificaVar(String nome){
 			if(!_tabelaSimbolo.exists(nome)){
-			System.out.println("\n Erro semantico, variavel nao declarada"+nome);
+			System.out.println("\n Erro semantico, variavel nao declarada "+nome);
 			} 
 		}
 		public void printComandos(ArrayList<Comando> comandos) {
@@ -1135,7 +1135,7 @@ public class GyhRepaginadoLanguageParser extends Parser {
 			{
 			setState(157);
 			match(PCImprimir);
-			setState(161);
+			setState(162);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case Var:
@@ -1153,6 +1153,11 @@ public class GyhRepaginadoLanguageParser extends Parser {
 				{
 				setState(160);
 				match(Cadeia);
+
+												ComandoEscrita cmd = new ComandoEscrita();
+												cmd.setCadeia(_input.LT(-1).getText());
+												_pilhaComandos.peek().add(cmd);
+											
 				}
 				break;
 			default:
@@ -1204,35 +1209,35 @@ public class GyhRepaginadoLanguageParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(163);
+			setState(164);
 			match(PCSe);
 			_varExp=""; _varCondicao=""; _varCondicaoif="";
-			setState(165);
-			expressaoRelacional();
 			setState(166);
+			expressaoRelacional();
+			setState(167);
 			match(PCEntao);
 
 								_bclComandos = new ArrayList<Comando>(); 
 								_pilhaComandos.push(_bclComandos);
 								_pilhaCondicao.push(_varCondicao);
 								
-			setState(168);
+			setState(169);
 			comando();
 
 							  	_listTrue = _pilhaComandos.pop();
 							  
-			setState(175);
+			setState(176);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,13,_ctx) ) {
 			case 1:
 				{
-				setState(170);
+				setState(171);
 				match(PCSenao);
 
 									_bclComandos = new ArrayList<Comando>(); 
 									_pilhaComandos.push(_bclComandos);
 								  
-				setState(172);
+				setState(173);
 				comando();
 
 								  	_listFalse = _pilhaComandos.pop();
@@ -1286,19 +1291,19 @@ public class GyhRepaginadoLanguageParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(179);
+			setState(180);
 			match(PCEnqto);
 			_varExp=""; _varCondicaowhile=""; _varCondicao="";
-			setState(181);
-			expressaoRelacional();
 			setState(182);
+			expressaoRelacional();
+			setState(183);
 			match(PCEntao);
 
 									_bclComandos = new ArrayList<Comando>();
 									_pilhaComandos.push(_bclComandos);
 									_pilhaCondicao.push(_varCondicao);
 								
-			setState(184);
+			setState(185);
 			comando();
 
 			                    listCmdAux = _pilhaComandos.pop();
@@ -1349,23 +1354,23 @@ public class GyhRepaginadoLanguageParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(187);
+			setState(188);
 			match(PCIni);
-			setState(189); 
+			setState(190); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(188);
+				setState(189);
 				comando();
 				}
 				}
-				setState(191); 
+				setState(192); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << PCLer) | (1L << PCImprimir) | (1L << PCSe) | (1L << PCEnqto) | (1L << PCIni) | (1L << Var))) != 0) );
-			setState(193);
+			setState(194);
 			match(PCFim);
 			}
 		}
@@ -1406,16 +1411,16 @@ public class GyhRepaginadoLanguageParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(195);
+			setState(196);
 			match(Var);
 
 								  verificaVar(_input.LT(-1).getText());
 								  _varId=_input.LT(-1).getText();
 								  _varExp="";
 								
-			setState(197);
-			match(Atrib);
 			setState(198);
+			match(Atrib);
+			setState(199);
 			expressaoAritmetica();
 
 								   ComandoAtribuicao cmd=new ComandoAtribuicao(_varId, _varExp);
@@ -1435,7 +1440,7 @@ public class GyhRepaginadoLanguageParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3!\u00cc\4\2\t\2\4"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3!\u00cd\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\4\25\t\25\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2"+
@@ -1446,55 +1451,55 @@ public class GyhRepaginadoLanguageParser extends Parser {
 		"\13\3\13\3\13\3\13\5\13{\n\13\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f"+
 		"\3\f\3\f\3\f\5\f\u008a\n\f\3\r\3\r\3\16\3\16\6\16\u0090\n\16\r\16\16\16"+
 		"\u0091\3\17\3\17\3\17\3\17\3\17\3\17\5\17\u009a\n\17\3\20\3\20\3\20\3"+
-		"\20\3\21\3\21\3\21\3\21\5\21\u00a4\n\21\3\22\3\22\3\22\3\22\3\22\3\22"+
-		"\3\22\3\22\3\22\3\22\3\22\3\22\5\22\u00b2\n\22\3\22\3\22\3\23\3\23\3\23"+
-		"\3\23\3\23\3\23\3\23\3\23\3\24\3\24\6\24\u00c0\n\24\r\24\16\24\u00c1\3"+
-		"\24\3\24\3\25\3\25\3\25\3\25\3\25\3\25\3\25\2\2\26\2\4\6\b\n\f\16\20\22"+
-		"\24\26\30\32\34\36 \"$&(\2\4\3\2\22\23\3\2\r\16\2\u00cc\2*\3\2\2\2\4\64"+
-		"\3\2\2\2\68\3\2\2\2\b>\3\2\2\2\nO\3\2\2\2\fQ\3\2\2\2\16b\3\2\2\2\20p\3"+
-		"\2\2\2\22r\3\2\2\2\24z\3\2\2\2\26\u0089\3\2\2\2\30\u008b\3\2\2\2\32\u008d"+
-		"\3\2\2\2\34\u0099\3\2\2\2\36\u009b\3\2\2\2 \u009f\3\2\2\2\"\u00a5\3\2"+
-		"\2\2$\u00b5\3\2\2\2&\u00bd\3\2\2\2(\u00c5\3\2\2\2*+\7\b\2\2+,\7\21\2\2"+
-		",-\7\7\2\2-.\5\4\3\2./\7\b\2\2/\60\7\20\2\2\60\61\7\7\2\2\61\62\5\32\16"+
-		"\2\62\63\b\2\1\2\63\3\3\2\2\2\64\66\5\6\4\2\65\67\5\4\3\2\66\65\3\2\2"+
-		"\2\66\67\3\2\2\2\67\5\3\2\2\289\7\34\2\29:\7\b\2\2:;\t\2\2\2;<\7\7\2\2"+
-		"<=\b\4\1\2=\7\3\2\2\2>?\5\f\7\2?@\5\n\6\2@\t\3\2\2\2AB\7\3\2\2BC\b\6\1"+
-		"\2CD\5\f\7\2DE\5\n\6\2EG\3\2\2\2FA\3\2\2\2FG\3\2\2\2GP\3\2\2\2HI\7\4\2"+
-		"\2IJ\b\6\1\2JK\5\f\7\2KL\5\n\6\2LN\3\2\2\2MH\3\2\2\2MN\3\2\2\2NP\3\2\2"+
-		"\2OF\3\2\2\2OM\3\2\2\2P\13\3\2\2\2QR\5\20\t\2RS\5\16\b\2S\r\3\2\2\2TU"+
-		"\7\5\2\2UV\b\b\1\2VW\5\20\t\2WX\5\16\b\2XZ\3\2\2\2YT\3\2\2\2YZ\3\2\2\2"+
-		"Zc\3\2\2\2[\\\7\6\2\2\\]\b\b\1\2]^\5\20\t\2^_\5\16\b\2_a\3\2\2\2`[\3\2"+
-		"\2\2`a\3\2\2\2ac\3\2\2\2bY\3\2\2\2b`\3\2\2\2c\17\3\2\2\2de\7\36\2\2eq"+
-		"\b\t\1\2fg\7\37\2\2gq\b\t\1\2hi\7\34\2\2iq\b\t\1\2jk\7\13\2\2kl\b\t\1"+
-		"\2lm\5\b\5\2mn\7\f\2\2no\b\t\1\2oq\3\2\2\2pd\3\2\2\2pf\3\2\2\2ph\3\2\2"+
-		"\2pj\3\2\2\2q\21\3\2\2\2rs\5\26\f\2st\5\24\13\2t\23\3\2\2\2uv\5\30\r\2"+
-		"vw\b\13\1\2wx\5\26\f\2xy\5\24\13\2y{\3\2\2\2zu\3\2\2\2z{\3\2\2\2{\25\3"+
-		"\2\2\2|}\5\b\5\2}~\b\f\1\2~\177\7\n\2\2\177\u0080\b\f\1\2\u0080\u0081"+
-		"\5\b\5\2\u0081\u0082\b\f\1\2\u0082\u008a\3\2\2\2\u0083\u0084\7\13\2\2"+
-		"\u0084\u0085\b\f\1\2\u0085\u0086\5\22\n\2\u0086\u0087\7\f\2\2\u0087\u0088"+
-		"\b\f\1\2\u0088\u008a\3\2\2\2\u0089|\3\2\2\2\u0089\u0083\3\2\2\2\u008a"+
-		"\27\3\2\2\2\u008b\u008c\t\3\2\2\u008c\31\3\2\2\2\u008d\u008f\b\16\1\2"+
-		"\u008e\u0090\5\34\17\2\u008f\u008e\3\2\2\2\u0090\u0091\3\2\2\2\u0091\u008f"+
-		"\3\2\2\2\u0091\u0092\3\2\2\2\u0092\33\3\2\2\2\u0093\u009a\5\36\20\2\u0094"+
-		"\u009a\5 \21\2\u0095\u009a\5\"\22\2\u0096\u009a\5(\25\2\u0097\u009a\5"+
-		"&\24\2\u0098\u009a\5$\23\2\u0099\u0093\3\2\2\2\u0099\u0094\3\2\2\2\u0099"+
-		"\u0095\3\2\2\2\u0099\u0096\3\2\2\2\u0099\u0097\3\2\2\2\u0099\u0098\3\2"+
-		"\2\2\u009a\35\3\2\2\2\u009b\u009c\7\24\2\2\u009c\u009d\7\34\2\2\u009d"+
-		"\u009e\b\20\1\2\u009e\37\3\2\2\2\u009f\u00a3\7\25\2\2\u00a0\u00a1\7\34"+
-		"\2\2\u00a1\u00a4\b\21\1\2\u00a2\u00a4\7\35\2\2\u00a3\u00a0\3\2\2\2\u00a3"+
-		"\u00a2\3\2\2\2\u00a4!\3\2\2\2\u00a5\u00a6\7\26\2\2\u00a6\u00a7\b\22\1"+
-		"\2\u00a7\u00a8\5\22\n\2\u00a8\u00a9\7\30\2\2\u00a9\u00aa\b\22\1\2\u00aa"+
-		"\u00ab\5\34\17\2\u00ab\u00b1\b\22\1\2\u00ac\u00ad\7\27\2\2\u00ad\u00ae"+
-		"\b\22\1\2\u00ae\u00af\5\34\17\2\u00af\u00b0\b\22\1\2\u00b0\u00b2\3\2\2"+
-		"\2\u00b1\u00ac\3\2\2\2\u00b1\u00b2\3\2\2\2\u00b2\u00b3\3\2\2\2\u00b3\u00b4"+
-		"\b\22\1\2\u00b4#\3\2\2\2\u00b5\u00b6\7\31\2\2\u00b6\u00b7\b\23\1\2\u00b7"+
-		"\u00b8\5\22\n\2\u00b8\u00b9\7\30\2\2\u00b9\u00ba\b\23\1\2\u00ba\u00bb"+
-		"\5\34\17\2\u00bb\u00bc\b\23\1\2\u00bc%\3\2\2\2\u00bd\u00bf\7\32\2\2\u00be"+
-		"\u00c0\5\34\17\2\u00bf\u00be\3\2\2\2\u00c0\u00c1\3\2\2\2\u00c1\u00bf\3"+
-		"\2\2\2\u00c1\u00c2\3\2\2\2\u00c2\u00c3\3\2\2\2\u00c3\u00c4\7\33\2\2\u00c4"+
-		"\'\3\2\2\2\u00c5\u00c6\7\34\2\2\u00c6\u00c7\b\25\1\2\u00c7\u00c8\7\t\2"+
-		"\2\u00c8\u00c9\5\b\5\2\u00c9\u00ca\b\25\1\2\u00ca)\3\2\2\2\21\66FMOY`"+
-		"bpz\u0089\u0091\u0099\u00a3\u00b1\u00c1";
+		"\20\3\21\3\21\3\21\3\21\3\21\5\21\u00a5\n\21\3\22\3\22\3\22\3\22\3\22"+
+		"\3\22\3\22\3\22\3\22\3\22\3\22\3\22\5\22\u00b3\n\22\3\22\3\22\3\23\3\23"+
+		"\3\23\3\23\3\23\3\23\3\23\3\23\3\24\3\24\6\24\u00c1\n\24\r\24\16\24\u00c2"+
+		"\3\24\3\24\3\25\3\25\3\25\3\25\3\25\3\25\3\25\2\2\26\2\4\6\b\n\f\16\20"+
+		"\22\24\26\30\32\34\36 \"$&(\2\4\3\2\22\23\3\2\r\16\2\u00cd\2*\3\2\2\2"+
+		"\4\64\3\2\2\2\68\3\2\2\2\b>\3\2\2\2\nO\3\2\2\2\fQ\3\2\2\2\16b\3\2\2\2"+
+		"\20p\3\2\2\2\22r\3\2\2\2\24z\3\2\2\2\26\u0089\3\2\2\2\30\u008b\3\2\2\2"+
+		"\32\u008d\3\2\2\2\34\u0099\3\2\2\2\36\u009b\3\2\2\2 \u009f\3\2\2\2\"\u00a6"+
+		"\3\2\2\2$\u00b6\3\2\2\2&\u00be\3\2\2\2(\u00c6\3\2\2\2*+\7\b\2\2+,\7\21"+
+		"\2\2,-\7\7\2\2-.\5\4\3\2./\7\b\2\2/\60\7\20\2\2\60\61\7\7\2\2\61\62\5"+
+		"\32\16\2\62\63\b\2\1\2\63\3\3\2\2\2\64\66\5\6\4\2\65\67\5\4\3\2\66\65"+
+		"\3\2\2\2\66\67\3\2\2\2\67\5\3\2\2\289\7\34\2\29:\7\b\2\2:;\t\2\2\2;<\7"+
+		"\7\2\2<=\b\4\1\2=\7\3\2\2\2>?\5\f\7\2?@\5\n\6\2@\t\3\2\2\2AB\7\3\2\2B"+
+		"C\b\6\1\2CD\5\f\7\2DE\5\n\6\2EG\3\2\2\2FA\3\2\2\2FG\3\2\2\2GP\3\2\2\2"+
+		"HI\7\4\2\2IJ\b\6\1\2JK\5\f\7\2KL\5\n\6\2LN\3\2\2\2MH\3\2\2\2MN\3\2\2\2"+
+		"NP\3\2\2\2OF\3\2\2\2OM\3\2\2\2P\13\3\2\2\2QR\5\20\t\2RS\5\16\b\2S\r\3"+
+		"\2\2\2TU\7\5\2\2UV\b\b\1\2VW\5\20\t\2WX\5\16\b\2XZ\3\2\2\2YT\3\2\2\2Y"+
+		"Z\3\2\2\2Zc\3\2\2\2[\\\7\6\2\2\\]\b\b\1\2]^\5\20\t\2^_\5\16\b\2_a\3\2"+
+		"\2\2`[\3\2\2\2`a\3\2\2\2ac\3\2\2\2bY\3\2\2\2b`\3\2\2\2c\17\3\2\2\2de\7"+
+		"\36\2\2eq\b\t\1\2fg\7\37\2\2gq\b\t\1\2hi\7\34\2\2iq\b\t\1\2jk\7\13\2\2"+
+		"kl\b\t\1\2lm\5\b\5\2mn\7\f\2\2no\b\t\1\2oq\3\2\2\2pd\3\2\2\2pf\3\2\2\2"+
+		"ph\3\2\2\2pj\3\2\2\2q\21\3\2\2\2rs\5\26\f\2st\5\24\13\2t\23\3\2\2\2uv"+
+		"\5\30\r\2vw\b\13\1\2wx\5\26\f\2xy\5\24\13\2y{\3\2\2\2zu\3\2\2\2z{\3\2"+
+		"\2\2{\25\3\2\2\2|}\5\b\5\2}~\b\f\1\2~\177\7\n\2\2\177\u0080\b\f\1\2\u0080"+
+		"\u0081\5\b\5\2\u0081\u0082\b\f\1\2\u0082\u008a\3\2\2\2\u0083\u0084\7\13"+
+		"\2\2\u0084\u0085\b\f\1\2\u0085\u0086\5\22\n\2\u0086\u0087\7\f\2\2\u0087"+
+		"\u0088\b\f\1\2\u0088\u008a\3\2\2\2\u0089|\3\2\2\2\u0089\u0083\3\2\2\2"+
+		"\u008a\27\3\2\2\2\u008b\u008c\t\3\2\2\u008c\31\3\2\2\2\u008d\u008f\b\16"+
+		"\1\2\u008e\u0090\5\34\17\2\u008f\u008e\3\2\2\2\u0090\u0091\3\2\2\2\u0091"+
+		"\u008f\3\2\2\2\u0091\u0092\3\2\2\2\u0092\33\3\2\2\2\u0093\u009a\5\36\20"+
+		"\2\u0094\u009a\5 \21\2\u0095\u009a\5\"\22\2\u0096\u009a\5(\25\2\u0097"+
+		"\u009a\5&\24\2\u0098\u009a\5$\23\2\u0099\u0093\3\2\2\2\u0099\u0094\3\2"+
+		"\2\2\u0099\u0095\3\2\2\2\u0099\u0096\3\2\2\2\u0099\u0097\3\2\2\2\u0099"+
+		"\u0098\3\2\2\2\u009a\35\3\2\2\2\u009b\u009c\7\24\2\2\u009c\u009d\7\34"+
+		"\2\2\u009d\u009e\b\20\1\2\u009e\37\3\2\2\2\u009f\u00a4\7\25\2\2\u00a0"+
+		"\u00a1\7\34\2\2\u00a1\u00a5\b\21\1\2\u00a2\u00a3\7\35\2\2\u00a3\u00a5"+
+		"\b\21\1\2\u00a4\u00a0\3\2\2\2\u00a4\u00a2\3\2\2\2\u00a5!\3\2\2\2\u00a6"+
+		"\u00a7\7\26\2\2\u00a7\u00a8\b\22\1\2\u00a8\u00a9\5\22\n\2\u00a9\u00aa"+
+		"\7\30\2\2\u00aa\u00ab\b\22\1\2\u00ab\u00ac\5\34\17\2\u00ac\u00b2\b\22"+
+		"\1\2\u00ad\u00ae\7\27\2\2\u00ae\u00af\b\22\1\2\u00af\u00b0\5\34\17\2\u00b0"+
+		"\u00b1\b\22\1\2\u00b1\u00b3\3\2\2\2\u00b2\u00ad\3\2\2\2\u00b2\u00b3\3"+
+		"\2\2\2\u00b3\u00b4\3\2\2\2\u00b4\u00b5\b\22\1\2\u00b5#\3\2\2\2\u00b6\u00b7"+
+		"\7\31\2\2\u00b7\u00b8\b\23\1\2\u00b8\u00b9\5\22\n\2\u00b9\u00ba\7\30\2"+
+		"\2\u00ba\u00bb\b\23\1\2\u00bb\u00bc\5\34\17\2\u00bc\u00bd\b\23\1\2\u00bd"+
+		"%\3\2\2\2\u00be\u00c0\7\32\2\2\u00bf\u00c1\5\34\17\2\u00c0\u00bf\3\2\2"+
+		"\2\u00c1\u00c2\3\2\2\2\u00c2\u00c0\3\2\2\2\u00c2\u00c3\3\2\2\2\u00c3\u00c4"+
+		"\3\2\2\2\u00c4\u00c5\7\33\2\2\u00c5\'\3\2\2\2\u00c6\u00c7\7\34\2\2\u00c7"+
+		"\u00c8\b\25\1\2\u00c8\u00c9\7\t\2\2\u00c9\u00ca\5\b\5\2\u00ca\u00cb\b"+
+		"\25\1\2\u00cb)\3\2\2\2\21\66FMOY`bpz\u0089\u0091\u0099\u00a4\u00b2\u00c2";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

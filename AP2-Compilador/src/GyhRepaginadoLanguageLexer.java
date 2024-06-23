@@ -134,7 +134,7 @@ public class GyhRepaginadoLanguageLexer extends Lexer {
 		}
 		public void verificaVar(String nome){
 			if(!_tabelaSimbolo.exists(nome)){
-			System.out.println("\n Erro semantico, variavel nao declarada"+nome);
+			System.out.println("\n Erro semantico, variavel nao declarada "+nome);
 			} 
 		}
 		public void printComandos(ArrayList<Comando> comandos) {
