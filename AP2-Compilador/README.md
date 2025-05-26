@@ -82,8 +82,6 @@ A linguagem "Gyh-Repaginado" é uma linguagem imperativa e procedural, estrutura
 
 * **Delimitadores e Símbolos:** `[`, `]`, `(`, `)`.
 
-A gramática formal da linguagem, utilizada pelo ANTLR (conforme detalhado nas regras de produção fornecidas), pode ser encontrada no arquivo `[NomeDaSuaGramatica].g4`. As definições de tokens (como `PCdec`, `OpAritSoma`, `Var`, `NumInt`, etc.) também são parte crucial dessa especificação léxica.
-
 ---
 
 ## Como Funciona: ANTLR e Geração de Código
@@ -111,10 +109,9 @@ O processo de compilação segue as etapas clássicas, com o ANTLR facilitando a
 ## Tecnologias Utilizadas
 
 * **Linguagem de Implementação do Compilador:** Java
-* **Gerador de Parser/Lexer:** ANTLR (versão [**Especifique a versão do ANTLR, ex: 4.x**])
-* **IDE/Ferramentas de Build:** [**Ex: Eclipse, IntelliJ IDEA com plugin ANTLR, Maven, Gradle**]
-* **Outras Ferramentas:** [**Se houver**]
+* **Gerador de Parser/Lexer:** ANTLR (versão [**4.7.2**])
+* **IDE/Ferramentas de Build:** [** Eclipse, VSCode**]
 
 ---
 
-## Estrutura do Repositório (Sugestão)
+## Estrutura do Repositório 
