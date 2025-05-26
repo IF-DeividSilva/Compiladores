@@ -23,18 +23,66 @@ A geração de código é facilitada por uma estrutura de classes de comando (`C
 
 ---
 
-## 📖 Especificação da Linguagem "[Nome da Linguagem Aqui]"
+## Especificação da Linguagem "Gyh-Repaginado"
 
-A linguagem "[Nome da Linguagem Aqui]" é uma linguagem [**imperativa/procedural/etc.**] desenvolvida para fins didáticos, com as seguintes características principais:
+A linguagem "Gyh-Repaginado" é uma linguagem imperativa e procedural, estruturada com blocos de declaração e de programa, desenvolvida para fins didáticos. Suas principais características são:
 
-* **Tipos de Dados:** [**Ex: Inteiro, Booleano, String, etc.**]
-* **Estruturas de Controle:** `if-else`, `while`.
-* **Operações:** [**Ex: Aritméticas (+, -, \*, /), Lógicas (AND, OR, NOT), etc.**]
-* **Entrada/Saída:** Comandos para leitura de dados do usuário e escrita de resultados.
+* **Estrutura do Programa:** Um programa em GYH é definido entre colchetes, iniciando com uma seção de declarações (`[dec] ListaDeclaracoes`) seguida por uma seção de comandos de programa (`[prog] ListaComandos`).
 
-A gramática formal da linguagem, utilizada pelo ANTLR, pode ser encontrada no arquivo `[NomeDaSuaGramatica].g4`.
+* **Declaração de Variáveis:** As variáveis são declaradas com um identificador (iniciado por letra maiúscula) seguido pelo tipo entre colchetes.
+    * Exemplo: `MINHAVAR [integer]`
 
-[**Opcional: Adicione um link para a documentação completa da linguagem, se houver. Ex: A especificação completa da linguagem pode ser encontrada em `docs/especificacao_linguagem.pdf`.**]
+* **Tipos de Dados:**
+    * `integer`: Para números inteiros (Sequências de dígitos sem ponto).
+    * `float`: Para números reais (Sequências de dígitos com ponto).
+    * `Cadeia`: Sequências de caracteres envoltas por aspas, utilizadas principalmente em comandos de saída.
+
+* **Estruturas de Controle:**
+    * **Condicional (`if`):**
+        * `if ExpressaoRelacional then Comando`
+        * `if ExpressaoRelacional then Comando else Comando`
+    * **Repetição (`while`):**
+        * `while ExpressaoRelacional then Comando`
+    * **Blocos de Comandos/SubAlgoritmo (`start`/`end`):**
+        * `start ListaComandos end` (permite agrupar múltiplos comandos onde um único comando é esperado).
+
+* **Operações:**
+    * **Aritméticas:**
+        * Adição (`+`)
+        * Subtração (`-`)
+        * Multiplicação (`*`)
+        * Divisão (`/`)
+    * **Relacionais:**
+        * Menor que (`<`)
+        * Menor ou igual (`<=`)
+        * Maior que (`>`)
+        * Maior ou igual (`>=`)
+        * Igual (`==`)
+        * Diferente (`<>`)
+    * **Lógicas/Booleanas:**
+        * `and`
+        * `or`
+    * **Atribuição:**
+        * `<<` (Ex: `VARIAVEL << ExpressaoAritmetica`)
+
+* **Entrada e Saída:**
+    * **Entrada (`read`):**
+        * `read VARIAVEL` (Lê um valor para uma variável).
+    * **Saída (`print`):**
+        * `print VARIAVEL` (Imprime o valor de uma variável).
+        * `print CADEIA` (Imprime uma cadeia de caracteres literal).
+
+* **Expressões:**
+    * **Aritméticas:** Combinações de números (inteiros ou reais), variáveis e parênteses com operadores aritméticos.
+    * **Relacionais:** Comparações entre expressões aritméticas usando operadores relacionais, ou expressões relacionais aninhadas com parênteses e operadores booleanos.
+
+* **Identificadores (Variáveis):** Sequências de letras ou números que começam com letra MAIÚSCULA.
+
+* **Palavras-chave:** `dec`, `prog`, `integer`, `float`, `read`, `print`, `if`, `else`, `then`, `while`, `start`, `end`, `and`, `or`.
+
+* **Delimitadores e Símbolos:** `[`, `]`, `(`, `)`.
+
+A gramática formal da linguagem, utilizada pelo ANTLR (conforme detalhado nas regras de produção fornecidas), pode ser encontrada no arquivo `[NomeDaSuaGramatica].g4`. As definições de tokens (como `PCdec`, `OpAritSoma`, `Var`, `NumInt`, etc.) também são parte crucial dessa especificação léxica.
 
 ---
 
@@ -69,4 +117,4 @@ O processo de compilação segue as etapas clássicas, com o ANTLR facilitando a
 
 ---
 
-## 📂 Estrutura do Repositório (Sugestão)
+## Estrutura do Repositório (Sugestão)
