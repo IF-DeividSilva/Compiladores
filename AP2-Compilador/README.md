@@ -138,3 +138,8 @@ AP2-Compilador/
 - E-mail: deivid.2002@alunos.utfpr.edu.br
 
 O principal objetivo deste projeto é consolidar e aplicar os conceitos de análise léxica e sintática e Java, além de aprofundar meu conhecimento sobre a arquitetura e a geração de código em compiladores.
+
+---
+
+## Licença
+MIT License © 2025
