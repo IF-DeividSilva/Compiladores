@@ -142,4 +142,4 @@ O principal objetivo deste projeto é consolidar e aplicar os conceitos de anál
 ---
 
 ## Licença
-MIT License © 2025
+MIT License © 2024
