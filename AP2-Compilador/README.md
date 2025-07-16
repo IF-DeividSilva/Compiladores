@@ -113,5 +113,28 @@ O processo de compilação segue as etapas clássicas, com o ANTLR facilitando a
 * **IDE/Ferramentas de Build:** [** Eclipse, VSCode**]
 
 ---
-
+```
 ## Estrutura do Repositório 
+AP2-Compilador/
+├── src/
+│   ├── Main.java
+│   ├── ComandoAtribuicao.java
+│   ├── ComandoCondicao.java
+│   ├── ... (outras classes de comando)
+│   ├── Gyh.g4 (gramática ANTLR)
+│   ├── GyhLexer.java (gerado pelo ANTLR)
+│   ├── GyhParser.java (gerado pelo ANTLR)
+│   └── ... (outras classes geradas e customizadas)
+├── test/
+│   ├── programa1.gyh
+│   ├── programa2.gyh
+│   └── ...
+└── README.md
+```
+
+---
+## Autor
+- Nome: Deivid da Silva Galvão
+- E-mail: deivid.2002@alunos.utfpr.edu.br
+
+O principal objetivo deste projeto é consolidar e aplicar os conceitos de análise léxica e sintática e Java, além de aprofundar meu conhecimento sobre a arquitetura e a geração de código em compiladores.
