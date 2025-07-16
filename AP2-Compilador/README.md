@@ -113,8 +113,8 @@ O processo de compilação segue as etapas clássicas, com o ANTLR facilitando a
 * **IDE/Ferramentas de Build:** [** Eclipse, VSCode**]
 
 ---
-```
 ## Estrutura do Repositório 
+```
 AP2-Compilador/
 ├── src/
 │   ├── Main.java
