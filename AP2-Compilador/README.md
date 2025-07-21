@@ -133,9 +133,9 @@ AP2-Compilador/
 ```
 
 ---
-## Autor
-- Nome: Deivid da Silva Galvão
-- E-mail: deivid.2002@alunos.utfpr.edu.br
+## Autores
+- Nomes: Deivid da Silva Galvão, João Vitor Nakahodo Yoshida
+- E-mails: deivid.2002@alunos.utfpr.edu.br, joaoyoshida@alunos.utfpr.edu.br
 
 O principal objetivo deste projeto é consolidar e aplicar os conceitos de análise léxica e sintática e Java, além de aprofundar meu conhecimento sobre a arquitetura e a geração de código em compiladores.
 
